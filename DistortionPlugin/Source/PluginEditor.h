@@ -14,7 +14,8 @@
 //==============================================================================
 /**
 */
-class DistortionPluginAudioProcessorEditor  : public juce::AudioProcessorEditor
+class DistortionPluginAudioProcessorEditor  : public juce::AudioProcessorEditor,
+    public juce::Slider::Listener
 {
 public:
     DistortionPluginAudioProcessorEditor (DistortionPluginAudioProcessor&);
@@ -23,34 +24,19 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
+    void sliderValueChanged(juce::Slider* slider) override;
 
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     
-    
-    juce::Slider driveSlider, foldsSlider, offsetSlider, fOutputSlider;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> driveSliderAttachment;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> foldsSliderAttachment;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> offsetSliderAttachment;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> fOutputSliderAttachment;
-    
-    
     DistortionPluginAudioProcessor& audioProcessor;
-    /*
-    juce::Slider foldsSlider, foldOffsetSlider, foldOutGainSlider;
-    juce::Label foldInGainLabel, foldsLabel, foldOffsetLabel, foldOutGainLabel;
+    juce::Slider driveSlider;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> driveSliderValue;
+    
+    
+    
 
-    juce::Slider rectInGainSlider, rectThreshSlider, rectOutGainSlider;
-    juce::Label rectInGainLabel, rectThreshLabel, rectOutGainLabel;
-
-    juce::Slider sClipInGainSlider, posAlphaSlider, sClipPosThreshSlider, negAlphaSlider, sClipNegThreshSlider, sClipOutGainSlider;
-    juce::Label sClipInGainLabel, posAlphaLabel, sClipPosThreshLabel, negAlphaLabel, sClipNegThreshLabel, sClipOutGainLabel;
-
-    juce::Slider crushStepsSlider;
-    juce::ToggleButton crushBypassButton;
-    juce::Label crushStepsLabel, crushBypassLabel;
-   */
 
 
 

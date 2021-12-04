@@ -13,28 +13,13 @@
 DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (DistortionPluginAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-
-    driveSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    driveSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 100, 50);
+    driveSliderValue = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "DRIVE", driveSlider);
+    driveSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    driveSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 60, 50);
+    //driveSlider.addListener(this);
     addAndMakeVisible(driveSlider);
-    driveSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "DRIVE", driveSlider);
-
-    foldsSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    foldsSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 100, 50);
-    addAndMakeVisible(foldsSlider);
-    foldsSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "FOLDS", foldsSlider);
-
-    offsetSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    offsetSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 100, 50);
-    addAndMakeVisible(offsetSlider);
-    offsetSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "OFFSET", offsetSlider);
-
-    fOutputSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    fOutputSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 100, 50);
-    addAndMakeVisible(fOutputSlider);
-    fOutputSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "FOUTPUT", fOutputSlider);
     
-    
+
     
     setSize (600, 300);
 }
@@ -53,8 +38,10 @@ void DistortionPluginAudioProcessorEditor::paint (juce::Graphics& g)
 
 void DistortionPluginAudioProcessorEditor::resized()
 {
-    driveSlider.setBounds(getWidth() / 2, getHeight() / 2 - 50, 200, 100);
-    fOutputSlider.setBounds(getWidth() / 2 - 100, getHeight() / 2 - 50, 200, 100);
-    foldsSlider.setBounds(getWidth() / 2 - 200, getHeight() / 2 - 50, 200, 100);
-    offsetSlider.setBounds(getWidth() / 2 - 300, getHeight() / 2 - 50, 200, 100);
+    driveSlider.setBounds(getLocalBounds());
+
+}
+
+void DistortionPluginAudioProcessorEditor::sliderValueChanged(juce::Slider* slider) 
+{
 }

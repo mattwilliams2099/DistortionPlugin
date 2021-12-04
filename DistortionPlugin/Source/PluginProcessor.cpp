@@ -12,16 +12,17 @@
 //==============================================================================
 DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
-                     #endif
-                       ), apvts(*this, nullptr, "Parameters", createParameters())
+    : AudioProcessor(BusesProperties()
+#if ! JucePlugin_IsMidiEffect
+#if ! JucePlugin_IsSynth
+        .withInput("Input", juce::AudioChannelSet::stereo(), true)
+#endif
+        .withOutput("Output", juce::AudioChannelSet::stereo(), true)
+#endif
+    ), apvts(*this, nullptr, "Parameters", { std::make_unique< juce::AudioParameterFloat>("DRIVE", "Drive", 0.0f, 5.0f, 1.0f) })
 #endif
 {
+    apvts.state = juce::ValueTree("savedParams");
 }
 
 DistortionPluginAudioProcessor::~DistortionPluginAudioProcessor()
@@ -150,10 +151,13 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
+    //float gain = *apvts.getRawParameterValue("DRIVE");
+    distortion.setFoldDrive(*apvts.getRawParameterValue("DRIVE"));
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
-
+        for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+            channelData[sample] = distortion.distortionProcess(channelData[sample]);
         // ..do something to the data...
     }
 }
@@ -194,7 +198,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout DistortionPluginAudioProcess
 {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
     parameters.push_back(std::make_unique< juce::AudioParameterFloat>("DRIVE", "Drive", 0.0f, 5.0f, 1.0f));
-    parameters.push_back(std::make_unique< juce::AudioParameterInt>("FOLDS", "FOLDS", 1, 8, 1));
+    parameters.push_back(std::make_unique< juce::AudioParameterFloat>("FOLDS", "FOLDS", 1.0f, 8.0f, 1.0f));
     parameters.push_back(std::make_unique< juce::AudioParameterFloat>("OFFSET", "Offset", -0.75f, 0.75f, 0.0f));
     parameters.push_back(std::make_unique< juce::AudioParameterFloat>("FOUTPUT", "Output", 0.0f, 5.0f, 1.0f));
     return { parameters.begin(), parameters.end() };

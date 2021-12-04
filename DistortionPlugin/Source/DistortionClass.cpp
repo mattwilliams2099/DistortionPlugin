@@ -73,3 +73,9 @@ float DistortionClass::waveFolder(float input)
         return ((-1 / folds) - (input + (7 / folds)));
 }
 
+float DistortionClass::distortionProcess(float input)
+{
+    //return foldOutGain * waveFolder((foldDrive * input)+ foldOffset);
+    return foldDrive * input;
+}
+

@@ -54,11 +54,12 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     juce::AudioProcessorValueTreeState apvts;
+    DistortionClass distortion;
 private:
 
     juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
 
-    DistortionClass distortion;
+    
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionPluginAudioProcessor)
 };
