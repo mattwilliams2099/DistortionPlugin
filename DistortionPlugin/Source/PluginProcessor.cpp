@@ -152,7 +152,7 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
     //float gain = *apvts.getRawParameterValue("DRIVE");
-    
+    distortion.setCrushSteps(*parameterTree.getRawParameterValue("STEPS"));
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
