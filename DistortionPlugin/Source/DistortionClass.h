@@ -21,7 +21,7 @@ private:
     float waveFolder(float input);
     float rectInGain, rectThresh, rectOutGain;
     float sClipInGain, posAlpha, sClipPosThresh, negAlpha, sClipNegThresh, sClipOutGain;
-    int crushSteps;
+    float crushSteps;
     bool crushBypass;
     float folds;
     float foldDrive = 0.0f, foldOutGain, foldOffset;
