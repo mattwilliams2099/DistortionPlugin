@@ -19,10 +19,10 @@ DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
 #endif
         .withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
-    ), apvts(*this, nullptr, "Parameters", { std::make_unique< juce::AudioParameterFloat>("DRIVE", "Drive", 0.0f, 5.0f, 1.0f) })
+    ), parameterTree(*this, nullptr, "Parameters", { std::make_unique< juce::AudioParameterFloat>("DRIVE", "Drive", 0.0f, 5.0f, 1.0f) })
 #endif
 {
-    apvts.state = juce::ValueTree("savedParams");
+    parameterTree.state = juce::ValueTree("savedParams");
 }
 
 DistortionPluginAudioProcessor::~DistortionPluginAudioProcessor()
@@ -152,7 +152,7 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
     //float gain = *apvts.getRawParameterValue("DRIVE");
-    distortion.setFoldDrive(*apvts.getRawParameterValue("DRIVE"));
+    
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);

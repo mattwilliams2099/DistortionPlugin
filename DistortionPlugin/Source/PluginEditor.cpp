@@ -13,10 +13,12 @@
 DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (DistortionPluginAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    driveSliderValue = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "DRIVE", driveSlider);
+    driveSliderAttachment= std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "DRIVE", driveSlider);
     driveSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
     driveSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 60, 50);
-    //driveSlider.addListener(this);
+    driveSlider.setRange(0.0f, 5.0f, 0.01f);
+    driveSlider.setValue(1.0f);
+    driveSlider.addListener(this);
     addAndMakeVisible(driveSlider);
     
 
@@ -44,4 +46,6 @@ void DistortionPluginAudioProcessorEditor::resized()
 
 void DistortionPluginAudioProcessorEditor::sliderValueChanged(juce::Slider* slider) 
 {
+    if(slider == &driveSlider)
+    audioProcessor.distortion.setFoldDrive(*audioProcessor.parameterTree.getRawParameterValue("DRIVE"));
 }

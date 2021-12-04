@@ -32,7 +32,7 @@ private:
     
     DistortionPluginAudioProcessor& audioProcessor;
     juce::Slider driveSlider;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> driveSliderValue;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> driveSliderAttachment;
     
     
     

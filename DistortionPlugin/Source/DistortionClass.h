@@ -24,7 +24,7 @@ private:
     int crushSteps;
     bool crushBypass;
     float folds;
-    float foldDrive, foldOutGain, foldOffset;
+    float foldDrive = 0.0f, foldOutGain, foldOffset;
 
 public:
     float distortionProcess(float input);
