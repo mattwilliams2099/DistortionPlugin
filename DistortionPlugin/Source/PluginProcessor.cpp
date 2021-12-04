@@ -19,7 +19,7 @@ DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ), apvts(*this, nullptr, "Parameters", createParameters())
 #endif
 {
 }
@@ -188,4 +188,14 @@ void DistortionPluginAudioProcessor::setStateInformation (const void* data, int 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new DistortionPluginAudioProcessor();
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout DistortionPluginAudioProcessor::createParameters() 
+{
+    std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
+    parameters.push_back(std::make_unique< juce::AudioParameterFloat>("DRIVE", "Drive", 0.0f, 5.0f, 1.0f));
+
+    return { parameters.begin(), parameters.end() };
+
+
 }

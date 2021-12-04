@@ -21,9 +21,10 @@ private:
     float waveFolder(float input);
     float rectInGain, rectThresh, rectOutGain;
     float sClipInGain, posAlpha, sClipPosThresh, negAlpha, sClipNegThresh, sClipOutGain;
-    float crushSteps;
+    int crushSteps;
     bool crushBypass;
-    float foldInGain, foldOutGain, folds, foldOffset;
+    int folds;
+    float foldInGain, foldOutGain, foldOffset;
 
 public:
     float distortionProcess(float input);
