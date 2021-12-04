@@ -194,7 +194,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout DistortionPluginAudioProcess
 {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
     parameters.push_back(std::make_unique< juce::AudioParameterFloat>("DRIVE", "Drive", 0.0f, 5.0f, 1.0f));
-
+    parameters.push_back(std::make_unique< juce::AudioParameterInt>("FOLDS", "FOLDS", 1, 8, 1));
+    parameters.push_back(std::make_unique< juce::AudioParameterFloat>("OFFSET", "Offset", -0.75f, 0.75f, 0.0f));
+    parameters.push_back(std::make_unique< juce::AudioParameterFloat>("FOUTPUT", "Output", 0.0f, 5.0f, 1.0f));
     return { parameters.begin(), parameters.end() };
 
 

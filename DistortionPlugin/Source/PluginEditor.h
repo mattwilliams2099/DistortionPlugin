@@ -27,9 +27,18 @@ public:
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
-    DistortionPluginAudioProcessor& audioProcessor;
     
-    juce::Slider foldInGainSlider, foldsSlider, foldOffsetSlider, foldOutGainSlider;
+    
+    juce::Slider driveSlider, foldsSlider, offsetSlider, fOutputSlider;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> driveSliderAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> foldsSliderAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> offsetSliderAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> fOutputSliderAttachment;
+    
+    
+    DistortionPluginAudioProcessor& audioProcessor;
+    /*
+    juce::Slider foldsSlider, foldOffsetSlider, foldOutGainSlider;
     juce::Label foldInGainLabel, foldsLabel, foldOffsetLabel, foldOutGainLabel;
 
     juce::Slider rectInGainSlider, rectThreshSlider, rectOutGainSlider;
@@ -41,7 +50,7 @@ private:
     juce::Slider crushStepsSlider;
     juce::ToggleButton crushBypassButton;
     juce::Label crushStepsLabel, crushBypassLabel;
-   
+   */
 
 
 
