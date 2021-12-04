@@ -20,6 +20,30 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
     driveSlider.setValue(1.0f);
     driveSlider.addListener(this);
     addAndMakeVisible(driveSlider);
+
+    foldsSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "FOLDS", foldsSlider);
+    foldsSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    foldsSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 60, 50);
+    foldsSlider.setRange(1.0f, 8.0f, 1.0f);
+    foldsSlider.setValue(1.0f);
+    foldsSlider.addListener(this);
+    addAndMakeVisible(foldsSlider);
+
+    offsetSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "OFFSET", offsetSlider);
+    offsetSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    offsetSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 60, 50);
+    offsetSlider.setRange(-0.75f, 0.75f, 0.01f);
+    offsetSlider.setValue(0.0f);
+    offsetSlider.addListener(this);
+    addAndMakeVisible(offsetSlider);
+
+    foldOutSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "FOUT", foldOutSlider);
+    foldOutSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    foldOutSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 60, 50);
+    foldOutSlider.setRange(0.0f, 5.0f, 0.01f);
+    foldOutSlider.setValue(1.0f);
+    foldOutSlider.addListener(this);
+    addAndMakeVisible(foldOutSlider);
     
 
     
@@ -40,12 +64,20 @@ void DistortionPluginAudioProcessorEditor::paint (juce::Graphics& g)
 
 void DistortionPluginAudioProcessorEditor::resized()
 {
-    driveSlider.setBounds(getLocalBounds());
-
+    driveSlider.setBounds(20, 10, 150, 150);
+    foldsSlider.setBounds(120, 10, 150, 150);
+    offsetSlider.setBounds(220, 10, 150, 150);
+    foldOutSlider.setBounds(320, 10, 150, 150);
 }
 
 void DistortionPluginAudioProcessorEditor::sliderValueChanged(juce::Slider* slider) 
 {
     if(slider == &driveSlider)
-    audioProcessor.distortion.setFoldDrive(*audioProcessor.parameterTree.getRawParameterValue("DRIVE"));
+        audioProcessor.distortion.setFoldDrive(*audioProcessor.parameterTree.getRawParameterValue("DRIVE"));
+    else if (slider == &foldsSlider)
+        audioProcessor.distortion.setFolds(*audioProcessor.parameterTree.getRawParameterValue("FOLDS"));
+    else if (slider == &offsetSlider)
+        audioProcessor.distortion.setFoldOffset(*audioProcessor.parameterTree.getRawParameterValue("OFFSET"));
+    else if (slider == &foldOutSlider)
+        audioProcessor.distortion.setFoldOutGain(*audioProcessor.parameterTree.getRawParameterValue("FOUT"));
 }

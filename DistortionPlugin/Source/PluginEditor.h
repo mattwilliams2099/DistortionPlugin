@@ -31,8 +31,12 @@ private:
     // access the processor object that created it.
     
     DistortionPluginAudioProcessor& audioProcessor;
-    juce::Slider driveSlider;
+    juce::Slider driveSlider, foldsSlider, offsetSlider, foldOutSlider;
+
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> driveSliderAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> foldsSliderAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> offsetSliderAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> foldOutSliderAttachment;
     
     
     
