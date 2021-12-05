@@ -197,13 +197,19 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 juce::AudioProcessorValueTreeState::ParameterLayout DistortionPluginAudioProcessor::createParameters() 
 {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("DRIVE", "Drive",        0.0f,   5.0f,   1.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("FOLDS", "FOLDS",        1.0f,   8.0f,   1.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("OFFSET","Offset",       -0.75f, 0.75f,  0.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("FOUT",  "Output",       0.0f,   5.0f,   1.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("STEPS", "Crush Steps",  4.0f,   16.0f,  4.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterBool>  ("BYPASS","Bypass",       false));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("CRMIX",  "Crush Mix",    0.0f,   1.0f,   1.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("DRIVE", "Drive",            0.0f,   5.0f,   1.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("FOLDS", "FOLDS",            1.0f,   8.0f,   1.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("OFFSET","Offset",           -0.75f, 0.75f,  0.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("FOUT",  "Output",           0.0f,   5.0f,   1.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("STEPS", "Crush Steps",      4.0f,   16.0f,  4.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterBool>  ("BYPASS","Bypass",           false));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("CRMIX",  "Crush Mix",        0.0f,   1.0f,   1.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("CLIPIN", "Pre Clip Gain",    0.0f,   1.5f,   1.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("PALPH",  "Pos Alpha",        0.1f,   20.0f,  1.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("PTHR",   "Pos Threshold",    0.0f,   1.0f,   1.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("NALPH",  "Neg Alpha",        -20.0f, -0.1f, 1.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("NTHR",   "Neg Threshold",    -1.0f,  0.0f,  -1.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("CLIPOUT","Post Clip Gain",   0.0f,   1.5f,   1.0f));
     return { parameters.begin(), parameters.end() };
 
 

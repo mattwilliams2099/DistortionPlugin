@@ -78,7 +78,8 @@ float DistortionClass::waveFolder(float input)
 
 float DistortionClass::distortionProcess(float input)
 {
-    float foldedSignal = foldOutGain * waveFolder(foldDrive * input + foldOffset);
-    return (crushAmt * bitCrusher(foldedSignal)) + (foldAmt * foldedSignal);
+    //float foldedSignal = foldOutGain * waveFolder(foldDrive * input + foldOffset);
+    //return (crushAmt * bitCrusher(foldedSignal)) + (foldAmt * foldedSignal);
+    return softClipper(input);
 }
 

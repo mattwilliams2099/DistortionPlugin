@@ -71,6 +71,53 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
     crushMixSlider.setValue(0.5f);
     addAndMakeVisible(crushMixSlider);
     
+    sClipInSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    sClipInSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 60, 50);
+    sClipInSlider.addListener(this);
+    sClipInSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "CLIPIN", sClipInSlider);
+    sClipInSlider.setRange(0.0f, 1.5f, 0.01f);
+    sClipInSlider.setValue(1.0f);
+    addAndMakeVisible(sClipInSlider);
+
+    posAlphaSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    posAlphaSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 60, 50);
+    posAlphaSlider.addListener(this);
+    posAlphaSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "PALPH", posAlphaSlider);
+    posAlphaSlider.setRange(0.1f, 20.0f, 0.01f);
+    posAlphaSlider.setValue(1.0f);
+    addAndMakeVisible(posAlphaSlider);
+
+    posThreshSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    posThreshSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 60, 50);
+    posThreshSlider.addListener(this);
+    posThreshSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "PTHR", posThreshSlider);
+    posThreshSlider.setRange(0.0f, 1.0f, 0.01f);
+    posThreshSlider.setValue(1.0f);
+    addAndMakeVisible(posThreshSlider);
+
+    negAlphaSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    negAlphaSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 60, 50);
+    negAlphaSlider.addListener(this);
+    negAlphaSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "NALPH", negAlphaSlider);
+    negAlphaSlider.setRange(-20.0f, -0.1f, 0.01f);
+    negAlphaSlider.setValue(-1.0f);
+    addAndMakeVisible(negAlphaSlider);
+
+    negThreshSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    negThreshSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 60, 50);
+    negThreshSlider.addListener(this);
+    negThreshSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "NTHR", negThreshSlider);
+    negThreshSlider.setRange(-1.0f, 0.0f, 0.01f);
+    negThreshSlider.setValue(-1.0f);
+    addAndMakeVisible(negThreshSlider);
+
+    sClipOutSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    sClipOutSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 60, 50);
+    sClipOutSlider.addListener(this);
+    sClipOutSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "CLIPOUT", sClipOutSlider);
+    sClipOutSlider.setRange(0.0f, 1.5f, 0.01f);
+    sClipOutSlider.setValue(1.0f);
+    addAndMakeVisible(sClipOutSlider);
     
     
     
@@ -82,7 +129,7 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
     testSlider.setRange(-1.0f, 16.0f, 0.01f);
     testSlider.setValue(0.0f);
     addAndMakeVisible(testSlider);
-    setSize (900, 300);
+    setSize (900, 500);
 }
 
 DistortionPluginAudioProcessorEditor::~DistortionPluginAudioProcessorEditor()
@@ -99,14 +146,22 @@ void DistortionPluginAudioProcessorEditor::paint (juce::Graphics& g)
 
 void DistortionPluginAudioProcessorEditor::resized()
 {
-    driveSlider.setBounds(20, 10, 150, 150);
-    foldsSlider.setBounds(120, 10, 150, 150);
-    offsetSlider.setBounds(220, 10, 150, 150);
-    foldOutSlider.setBounds(320, 10, 150, 150);
-    crushStepsSlider.setBounds(440, 10, 150, 150);
-    testSlider.setBounds(100, 200, 300, 50);
-    bypassToggle.setBounds(600, 10, 150, 150);
-    crushMixSlider.setBounds(650, 10, 150, 150);
+    driveSlider.setBounds       (20, 10, 150, 150);
+    foldsSlider.setBounds       (120, 10, 150, 150);
+    offsetSlider.setBounds      (220, 10, 150, 150);
+    foldOutSlider.setBounds     (320, 10, 150, 150);
+    crushStepsSlider.setBounds  (440, 10, 150, 150);
+    //testSlider.setBounds        (100, 200, 300, 50);
+    bypassToggle.setBounds      (600, 10, 150, 150);
+    crushMixSlider.setBounds    (650, 10, 150, 150);
+
+    sClipInSlider.setBounds     (20,  200, 150, 150);
+    posAlphaSlider.setBounds    (120, 200, 150, 150);
+    posThreshSlider.setBounds   (220, 200, 150, 150);
+    negAlphaSlider.setBounds    (320, 200, 150, 150);
+    negThreshSlider.setBounds   (420, 200, 150, 150);
+    sClipOutSlider.setBounds    (520, 200, 150, 150);
+
 }
 
 void DistortionPluginAudioProcessorEditor::sliderValueChanged(juce::Slider* slider) 
@@ -134,8 +189,33 @@ void DistortionPluginAudioProcessorEditor::sliderValueChanged(juce::Slider* slid
     else if (slider == &crushMixSlider)
     {
         audioProcessor.distortion.setCrushAmt(*audioProcessor.parameterTree.getRawParameterValue("CRMIX"));
-        testSlider.setValue(*audioProcessor.parameterTree.getRawParameterValue("CRMIX"));
     }
+    else if (slider == &sClipInSlider)
+    {
+        audioProcessor.distortion.setSClipInGain(*audioProcessor.parameterTree.getRawParameterValue("CLIPIN"));
+    }
+
+    else if (slider == &posAlphaSlider)
+    {
+        audioProcessor.distortion.setPosAlpha(*audioProcessor.parameterTree.getRawParameterValue("PALPH"));
+    }
+    else if (slider == &posThreshSlider)
+    {
+        audioProcessor.distortion.setSClipPosThresh(*audioProcessor.parameterTree.getRawParameterValue("PTHR"));
+    }
+    else if (slider == &negAlphaSlider)
+    {
+        audioProcessor.distortion.setNegAlpha(*audioProcessor.parameterTree.getRawParameterValue("NALPH"));
+    }
+    else if (slider == &negThreshSlider)
+    {
+        audioProcessor.distortion.setSClipNegThresh(*audioProcessor.parameterTree.getRawParameterValue("NTHR"));
+    }
+    else if (slider == &sClipOutSlider)
+    {
+        audioProcessor.distortion.setSClipOutGain(*audioProcessor.parameterTree.getRawParameterValue("CLIPOUT"));
+    }
+    
 }
 
 void DistortionPluginAudioProcessorEditor::buttonClicked(juce::Button* button)
