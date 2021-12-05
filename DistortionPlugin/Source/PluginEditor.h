@@ -33,7 +33,7 @@ private:
     
     DistortionPluginAudioProcessor& audioProcessor;
     juce::Slider driveSlider, foldsSlider, offsetSlider, foldOutSlider, crushStepsSlider, testSlider, crushMixSlider;
-    juce::Slider sClipInSlider, posAlphaSlider, posThreshSlider, negAlphaSlider, negThreshSlider, sClipOutSlider;
+    juce::Slider sClipInSlider, posAlphaSlider, posThreshSlider, negAlphaSlider, negThreshSlider, sClipOutSlider, clipMixSlider;
     juce::ToggleButton bypassToggle, symmetryToggle;
 
     
@@ -43,7 +43,7 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> offsetSliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> foldOutSliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> crushStepsSliderAttachment;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> bypassToggleAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> symmetryToggleAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> crushMixSliderAttachment;
     
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sClipInSliderAttachment;
@@ -52,6 +52,8 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> negAlphaSliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> negThreshSliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sClipOutSliderAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> clipMixSliderAttachment;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionPluginAudioProcessorEditor)
 };

@@ -58,10 +58,10 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
     crushStepsSlider.setValue(4.0f);
     addAndMakeVisible(crushStepsSlider);
 
-    bypassToggle.addListener(this);
-    bypassToggleAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.parameterTree, "BYPASS", bypassToggle);
-    bypassToggle.setToggleState(false, juce::dontSendNotification);
-    addAndMakeVisible(bypassToggle);
+    symmetryToggle.addListener(this);
+    symmetryToggleAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.parameterTree, "SYM", symmetryToggle);
+    symmetryToggle.setToggleState(true, juce::dontSendNotification);
+    addAndMakeVisible(symmetryToggle);
 
     crushMixSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
     crushMixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 60, 50);
@@ -99,16 +99,16 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
     negAlphaSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 60, 50);
     negAlphaSlider.addListener(this);
     negAlphaSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "NALPH", negAlphaSlider);
-    negAlphaSlider.setRange(-20.0f, -0.1f, 0.01f);
-    negAlphaSlider.setValue(-1.0f);
+    negAlphaSlider.setRange(0.1f, 20.0f, 0.01f);
+    negAlphaSlider.setValue(1.0f);
     addAndMakeVisible(negAlphaSlider);
 
     negThreshSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
     negThreshSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 60, 50);
     negThreshSlider.addListener(this);
     negThreshSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "NTHR", negThreshSlider);
-    negThreshSlider.setRange(-1.0f, 0.0f, 0.01f);
-    negThreshSlider.setValue(-1.0f);
+    negThreshSlider.setRange(0.0f, 1.0f, 0.01f);
+    negThreshSlider.setValue(1.0f);
     addAndMakeVisible(negThreshSlider);
 
     sClipOutSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
@@ -119,7 +119,13 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
     sClipOutSlider.setValue(1.0f);
     addAndMakeVisible(sClipOutSlider);
     
-    
+    clipMixSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    clipMixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 60, 50);
+    clipMixSlider.addListener(this);
+    clipMixSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "MIX", clipMixSlider);
+    clipMixSlider.setRange(0.0f, 1.0f, 0.01f);
+    clipMixSlider.setValue(0.5f);
+    addAndMakeVisible(clipMixSlider);
     
     
     
@@ -152,7 +158,7 @@ void DistortionPluginAudioProcessorEditor::resized()
     foldOutSlider.setBounds     (320, 10, 150, 150);
     crushStepsSlider.setBounds  (440, 10, 150, 150);
     //testSlider.setBounds        (100, 200, 300, 50);
-    bypassToggle.setBounds      (600, 10, 150, 150);
+    symmetryToggle.setBounds      (600, 10, 150, 150);
     crushMixSlider.setBounds    (650, 10, 150, 150);
 
     sClipInSlider.setBounds     (20,  200, 150, 150);
@@ -161,6 +167,7 @@ void DistortionPluginAudioProcessorEditor::resized()
     negAlphaSlider.setBounds    (320, 200, 150, 150);
     negThreshSlider.setBounds   (420, 200, 150, 150);
     sClipOutSlider.setBounds    (520, 200, 150, 150);
+    clipMixSlider.setBounds     (620, 200, 150, 150);
 
 }
 
@@ -168,33 +175,32 @@ void DistortionPluginAudioProcessorEditor::sliderValueChanged(juce::Slider* slid
 {
     if (slider == &driveSlider) {
         audioProcessor.distortion.setFoldDrive(*audioProcessor.parameterTree.getRawParameterValue("DRIVE"));
-        testSlider.setValue(*audioProcessor.parameterTree.getRawParameterValue("DRIVE"));
+        
     }
     else if (slider == &foldsSlider) {
         audioProcessor.distortion.setFolds(*audioProcessor.parameterTree.getRawParameterValue("FOLDS"));
-        testSlider.setValue(audioProcessor.distortion.getFolds());
+        
     }
     else if (slider == &offsetSlider){
         audioProcessor.distortion.setFoldOffset(*audioProcessor.parameterTree.getRawParameterValue("OFFSET"));
-        testSlider.setValue(*audioProcessor.parameterTree.getRawParameterValue("OFFSET"));
+        
 }
     else if (slider == &foldOutSlider){
         audioProcessor.distortion.setFoldOutGain(*audioProcessor.parameterTree.getRawParameterValue("FOUT"));
-        testSlider.setValue(*audioProcessor.parameterTree.getRawParameterValue("FOUT"));
+        
     }
     else if (slider == &crushStepsSlider) {
         audioProcessor.distortion.setCrushSteps(*audioProcessor.parameterTree.getRawParameterValue("STEPS"));
-        testSlider.setValue(*audioProcessor.parameterTree.getRawParameterValue("STEPS"));
+        
     }
     else if (slider == &crushMixSlider)
     {
-        audioProcessor.distortion.setCrushAmt(*audioProcessor.parameterTree.getRawParameterValue("CRMIX"));
+        audioProcessor.distortion.setCrushMix(*audioProcessor.parameterTree.getRawParameterValue("CRMIX"));
     }
     else if (slider == &sClipInSlider)
     {
         audioProcessor.distortion.setSClipInGain(*audioProcessor.parameterTree.getRawParameterValue("CLIPIN"));
     }
-
     else if (slider == &posAlphaSlider)
     {
         audioProcessor.distortion.setPosAlpha(*audioProcessor.parameterTree.getRawParameterValue("PALPH"));
@@ -215,14 +221,31 @@ void DistortionPluginAudioProcessorEditor::sliderValueChanged(juce::Slider* slid
     {
         audioProcessor.distortion.setSClipOutGain(*audioProcessor.parameterTree.getRawParameterValue("CLIPOUT"));
     }
+    else if (slider == &clipMixSlider)
+    {
+        audioProcessor.distortion.setMix(*audioProcessor.parameterTree.getRawParameterValue("MIX"));
+    }
     
 }
 
 void DistortionPluginAudioProcessorEditor::buttonClicked(juce::Button* button)
 {
-    if (button == &bypassToggle)
+    if (button == &symmetryToggle)
     {
-        audioProcessor.distortion.setCrushBypass(*audioProcessor.parameterTree.getRawParameterValue("BYPASS"));
-        testSlider.setValue(*audioProcessor.parameterTree.getRawParameterValue("BYPASS"));
+        audioProcessor.distortion.setSymmetryToggle(*audioProcessor.parameterTree.getRawParameterValue("SYM"));
+        if (audioProcessor.distortion.getsymmetryToggle() == true)
+        {
+            audioProcessor.distortion.setPosAlpha(*audioProcessor.parameterTree.getRawParameterValue("PALPH"));
+            audioProcessor.distortion.setSClipPosThresh(*audioProcessor.parameterTree.getRawParameterValue("PTHR"));
+            negThreshSlider.setVisible(false);
+            negAlphaSlider.setVisible(false);
+        }
+        else 
+        {
+            audioProcessor.distortion.setNegAlpha(*audioProcessor.parameterTree.getRawParameterValue("NALPH"));
+            audioProcessor.distortion.setSClipNegThresh(*audioProcessor.parameterTree.getRawParameterValue("NTHR"));
+            negThreshSlider.setVisible(true);
+            negAlphaSlider.setVisible(true);
+        }
     }
 }

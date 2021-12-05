@@ -9,3 +9,8 @@
 */
 
 #pragma once
+
+inline float wetDryMix (float wet)
+{
+    return 1.0f - wet;
+}

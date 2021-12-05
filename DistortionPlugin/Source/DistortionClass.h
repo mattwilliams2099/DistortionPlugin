@@ -10,33 +10,24 @@
 
 #pragma once
 #include <cmath>
+#include "AudioUtilities.h"
 
 class DistortionClass
 {
 private:
-    float halfRectifier(float input);
-    float fullRectifier(float input);
     float softClipper(float input);
     float bitCrusher(float input);
     float waveFolder(float input);
     float rectInGain, rectThresh, rectOutGain;
     float sClipInGain, posAlpha, sClipPosThresh, negAlpha, sClipNegThresh, sClipOutGain;
     float crushSteps;
-    bool crushBypass;
+    bool crushBypass, symmetryToggle;
     float folds;
     float foldDrive = 0.0f, foldOutGain, foldOffset;
-    float foldAmt, crushAmt;
+    float crushMix, sClipMix;
 
 public:
     float distortionProcess(float input);
-
-    float getRectInGain()               { return rectInGain; }
-    float getRectThresh()               { return rectThresh; }
-    float getRectOutGain()              { return rectOutGain; }
-
-    void setRectInGain(float newVal)    { rectInGain = newVal; }
-    void setRectThresh(float newVal)    { rectThresh = newVal; }
-    void setRectOutGain(float newVal)   { rectOutGain = newVal; }
 
     float getSClipInGain()              { return sClipInGain; }
     float getPosAlpha()                 { return posAlpha; }
@@ -46,17 +37,25 @@ public:
     float getSClipOutGain()             { return sClipOutGain; }
 
     void setSClipInGain(float newVal)   { sClipInGain = newVal; }
-    void setPosAlpha(float newVal)      { posAlpha = newVal; }
-    void setSClipPosThresh(float newVal){ sClipPosThresh = newVal; }
+    void setPosAlpha(float newVal) 
+    {
+        posAlpha = newVal;
+        if (symmetryToggle == true) negAlpha = posAlpha;
+    }
+    void setSClipPosThresh(float newVal)
+    { 
+        sClipPosThresh = newVal;
+        if (symmetryToggle == true) sClipNegThresh = sClipPosThresh;
+    }
     void setNegAlpha(float newVal)      { negAlpha = newVal; }
     void setSClipNegThresh(float newVal){ sClipNegThresh = newVal; }
     void setSClipOutGain(float newVal)  { sClipOutGain = newVal; }
 
     float getCrushSteps()               { return crushSteps; }
-    bool getCrushBypass()               { return crushBypass; }
+    bool getsymmetryToggle()               { return symmetryToggle; }
 
     void setCrushSteps(float newVal)    { crushSteps = newVal; }
-    void setCrushBypass(bool newBool)   { crushBypass = newBool; }
+    void setSymmetryToggle(bool newBool)   { symmetryToggle = newBool; }
 
     float getFoldDrive()               { return foldDrive; }
     float getFoldOutGain()              { return foldOutGain; }
@@ -68,9 +67,10 @@ public:
     void setFolds(float newVal)         { folds = newVal; }
     void setFoldOffset(float newVal)    { foldOffset = newVal; }
 
-    void setCrushAmt(float newVal) {
-        crushAmt = newVal;
-        foldAmt = 1 - crushAmt;
+    void setCrushMix(float newVal) {
+        crushMix = newVal;
     }
-
+    void setMix(float newVal) {
+        sClipMix = newVal;
+    }
 };
