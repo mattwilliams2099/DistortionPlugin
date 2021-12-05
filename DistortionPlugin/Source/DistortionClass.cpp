@@ -33,7 +33,10 @@ float DistortionClass::softClipper(float input)
 
 float DistortionClass::bitCrusher(float input)
 {
-        return round(input * crushSteps) * (1 / crushSteps);
+    if (crushBypass == true)
+        return input;
+    else 
+        return round(input * crushSteps) * (1.0f / crushSteps);
 
 }
 
@@ -75,6 +78,7 @@ float DistortionClass::waveFolder(float input)
 
 float DistortionClass::distortionProcess(float input)
 {
-    return bitCrusher((foldOutGain * waveFolder((foldDrive * input) + foldOffset)));
+    float foldedSignal = foldOutGain * waveFolder(foldDrive * input + foldOffset);
+    return (crushAmt * bitCrusher(foldedSignal)) + (foldAmt * foldedSignal);
 }
 

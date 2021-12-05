@@ -152,7 +152,7 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
     //float gain = *apvts.getRawParameterValue("DRIVE");
-    distortion.setCrushSteps(*parameterTree.getRawParameterValue("STEPS"));
+    
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
@@ -197,11 +197,13 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 juce::AudioProcessorValueTreeState::ParameterLayout DistortionPluginAudioProcessor::createParameters() 
 {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
-    parameters.push_back(std::make_unique< juce::AudioParameterFloat>("DRIVE", "Drive", 0.0f, 5.0f, 1.0f));
-    parameters.push_back(std::make_unique< juce::AudioParameterFloat>("FOLDS", "FOLDS", 1.0f, 8.0f, 1.0f));
-    parameters.push_back(std::make_unique< juce::AudioParameterFloat>("OFFSET", "Offset", -0.75f, 0.75f, 0.0f));
-    parameters.push_back(std::make_unique< juce::AudioParameterFloat>("FOUT", "Output", 0.0f, 5.0f, 1.0f));
-    parameters.push_back(std::make_unique< juce::AudioParameterFloat>("STEPS", "Crush Steps", 4.0f, 16.0f, 4.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("DRIVE", "Drive",        0.0f,   5.0f,   1.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("FOLDS", "FOLDS",        1.0f,   8.0f,   1.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("OFFSET","Offset",       -0.75f, 0.75f,  0.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("FOUT",  "Output",       0.0f,   5.0f,   1.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("STEPS", "Crush Steps",  4.0f,   16.0f,  4.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterBool>  ("BYPASS","Bypass",       false));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("CRMIX",  "Crush Mix",    0.0f,   1.0f,   1.0f));
     return { parameters.begin(), parameters.end() };
 
 

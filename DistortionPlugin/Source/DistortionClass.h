@@ -25,6 +25,7 @@ private:
     bool crushBypass;
     float folds;
     float foldDrive = 0.0f, foldOutGain, foldOffset;
+    float foldAmt, crushAmt;
 
 public:
     float distortionProcess(float input);
@@ -67,6 +68,9 @@ public:
     void setFolds(float newVal)         { folds = newVal; }
     void setFoldOffset(float newVal)    { foldOffset = newVal; }
 
-
+    void setCrushAmt(float newVal) {
+        crushAmt = newVal;
+        foldAmt = 1 - crushAmt;
+    }
 
 };
