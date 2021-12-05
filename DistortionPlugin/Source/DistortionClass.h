@@ -52,7 +52,7 @@ public:
     void setSClipOutGain(float newVal)  { sClipOutGain = newVal; }
 
     float getCrushSteps()               { return crushSteps; }
-    bool getsymmetryToggle()               { return symmetryToggle; }
+    bool getSymmetryToggle()               { return symmetryToggle; }
 
     void setCrushSteps(float newVal)    { crushSteps = newVal; }
     void setSymmetryToggle(bool newBool)   { symmetryToggle = newBool; }
@@ -66,7 +66,8 @@ public:
     void setFoldOutGain(float newVal)   { foldOutGain = newVal; }
     void setFolds(float newVal)         { folds = newVal; }
     void setFoldOffset(float newVal)    { foldOffset = newVal; }
-
+    float getCrushMix() { return crushMix; }
+    float getMix() { return sClipMix; }
     void setCrushMix(float newVal) {
         crushMix = newVal;
     }

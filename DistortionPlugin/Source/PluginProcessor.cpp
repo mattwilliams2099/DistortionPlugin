@@ -96,6 +96,18 @@ void DistortionPluginAudioProcessor::prepareToPlay (double sampleRate, int sampl
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    drivePrev = *parameterTree.getRawParameterValue("DRIVE");
+    offsetPrev = *parameterTree.getRawParameterValue("OFFSET");
+    fOutPrev = *parameterTree.getRawParameterValue("FOUT");
+    crMixPrev = *parameterTree.getRawParameterValue("CRMIX");
+    clipInPrev = *parameterTree.getRawParameterValue("CLIPIN");
+    posAlphPrev = *parameterTree.getRawParameterValue("PALPH");
+    posThreshPrev = *parameterTree.getRawParameterValue("PTHR");
+    negAlphPrev = *parameterTree.getRawParameterValue("NALPH");
+    negThreshPrev = *parameterTree.getRawParameterValue("NTHR");
+    clipOutPrev = *parameterTree.getRawParameterValue("CLIPOUT");
+    mixPrev = *parameterTree.getRawParameterValue("MIX");
+    
 }
 
 void DistortionPluginAudioProcessor::releaseResources()
@@ -136,6 +148,23 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
+
+    distortion.setFoldDrive(parameterSmooth(*parameterTree.getRawParameterValue("DRIVE"), drivePrev));
+    //distortion.setFolds(parameterSmooth(*parameterTree.getRawParameterValue("FOLDS"));
+    distortion.setFoldOffset(parameterSmooth(*parameterTree.getRawParameterValue("OFFSET"), offsetPrev));
+    distortion.setFoldOutGain(parameterSmooth(*parameterTree.getRawParameterValue("FOUT"), fOutPrev));
+    //distortion.setCrushSteps(parameterSmooth(*parameterTree.getRawParameterValue("STEPS"));
+    distortion.setCrushMix(parameterSmooth(*parameterTree.getRawParameterValue("CRMIX"), crMixPrev));
+    distortion.setSClipInGain(parameterSmooth(*parameterTree.getRawParameterValue("CLIPIN"), clipInPrev));
+    distortion.setPosAlpha(parameterSmooth(*parameterTree.getRawParameterValue("PALPH"), posAlphPrev));
+    distortion.setSClipPosThresh(parameterSmooth(*parameterTree.getRawParameterValue("PTHR"), posThreshPrev));
+    distortion.setSClipOutGain(parameterSmooth(*parameterTree.getRawParameterValue("CLIPOUT"), clipOutPrev));
+    distortion.setMix(parameterSmooth(*parameterTree.getRawParameterValue("MIX"), mixPrev));
+    if (distortion.getSymmetryToggle() == false)
+    {
+        distortion.setNegAlpha(parameterSmooth(*parameterTree.getRawParameterValue("NALPH"), negAlphPrev));
+        distortion.setSClipNegThresh(parameterSmooth(*parameterTree.getRawParameterValue("NTHR"), negThreshPrev));
+    }
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
     // guaranteed to be empty - they may contain garbage).
@@ -151,15 +180,26 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
-    //float gain = *apvts.getRawParameterValue("DRIVE");
+
     
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
             channelData[sample] = distortion.distortionProcess(channelData[sample]);
-        // ..do something to the data...
+
     }
+    drivePrev = distortion.getFoldDrive();
+    offsetPrev = distortion.getFoldOffset();
+    fOutPrev = distortion.getFoldOutGain();
+    crMixPrev = distortion.getCrushMix();
+    clipInPrev = distortion.getSClipInGain();
+    posAlphPrev = distortion.getPosAlpha();
+    posThreshPrev = distortion.getSClipPosThresh();
+    negAlphPrev = distortion.getNegAlpha();
+    negThreshPrev = distortion.getSClipNegThresh();
+    clipOutPrev = distortion.getSClipOutGain();
+    mixPrev = distortion.getMix();
 }
 
 //==============================================================================
@@ -202,7 +242,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout DistortionPluginAudioProcess
     parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("OFFSET","Offset",           -0.75f, 0.75f,  0.0f));
     parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("FOUT",  "Output",           0.0f,   5.0f,   1.0f));
     parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("STEPS", "Crush Steps",      4.0f,   16.0f,  4.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterBool>  ("SYM","SYMMETRY",           true));
     parameters.push_back(std::make_unique <juce::AudioParameterFloat>("CRMIX",  "Crush Mix",        0.0f,   1.0f,   1.0f));
     parameters.push_back(std::make_unique <juce::AudioParameterFloat>("CLIPIN", "Pre Clip Gain",    0.0f,   1.5f,   1.0f));
     parameters.push_back(std::make_unique <juce::AudioParameterFloat>("PALPH",  "Pos Alpha",        0.1f,   20.0f,  1.0f));
@@ -211,8 +250,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout DistortionPluginAudioProcess
     parameters.push_back(std::make_unique <juce::AudioParameterFloat>("NTHR",   "Neg Threshold",    0.0f,   1.0f,   1.0f));
     parameters.push_back(std::make_unique <juce::AudioParameterFloat>("CLIPOUT","Post Clip Gain",   0.0f,   1.5f,   1.0f));
     parameters.push_back(std::make_unique <juce::AudioParameterFloat>("MIX",    "Mix",              0.0f,   1.0f,   0.5f));
-
+    parameters.push_back(std::make_unique <juce::AudioParameterBool>  ("SYM",   "SYMMETRY",         true));
     return { parameters.begin(), parameters.end() };
+}
 
-
+void DistortionPluginAudioProcessor::parameterSmoothing()
+{
+  
 }

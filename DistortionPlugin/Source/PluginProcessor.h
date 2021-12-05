@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "DistortionClass.h"
+#include "AudioUtilities.h"
 
 //==============================================================================
 /**
@@ -56,9 +57,9 @@ public:
     juce::AudioProcessorValueTreeState parameterTree;
     DistortionClass distortion;
 private:
-
+    float drivePrev, offsetPrev, fOutPrev, crMixPrev, clipInPrev, posAlphPrev, posThreshPrev, negAlphPrev, negThreshPrev, clipOutPrev, mixPrev;
     juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
-
+    void parameterSmoothing();
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionPluginAudioProcessor)
