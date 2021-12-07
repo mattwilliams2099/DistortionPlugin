@@ -13,62 +13,7 @@
 DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (DistortionPluginAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    
-    driveSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    driveSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 40, 30);
-    driveSlider.addListener(this);
-    driveSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "DRIVE", driveSlider);
-    driveSlider.setRange(0.0f, 5.0f, 0.01f);
-    driveSlider.setValue(1.0f);
-    addAndMakeVisible(driveSlider);
-    driveLabel.setText("DRIVE", juce::dontSendNotification);
-    driveLabel.attachToComponent(&driveSlider, false);
-    addAndMakeVisible(driveLabel);
-    
-    foldsSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    foldsSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 40, 30);
-    foldsSlider.addListener(this);
-    foldsSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "FOLDS", foldsSlider);
-    foldsSlider.setRange(1.0f, 8.0f, 1.0f);
-    foldsSlider.setValue(1.0f);
-    addAndMakeVisible(foldsSlider);
-    foldsLabel.setText("FOLDS", juce::dontSendNotification);
-    foldsLabel.attachToComponent(&foldsSlider, false);
-    addAndMakeVisible(foldsLabel);
-    
-    offsetSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    offsetSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 40, 30);
-    offsetSlider.addListener(this);
-    offsetSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "OFFSET", offsetSlider);
-    offsetSlider.setRange(-0.75f, 0.75f, 0.01f);
-    offsetSlider.setValue(0.0f);
-    addAndMakeVisible(offsetSlider);
-    offsetLabel.setText("BIAS", juce::dontSendNotification);
-    offsetLabel.attachToComponent(&offsetSlider, false);
-    addAndMakeVisible(offsetLabel);
-
-    
-    foldOutSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    foldOutSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 40, 30);
-    foldOutSlider.addListener(this);
-    foldOutSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "FOUT", foldOutSlider);
-    foldOutSlider.setRange(0.0f, 5.0f, 0.01f);
-    foldOutSlider.setValue(1.0f);
-    addAndMakeVisible(foldOutSlider);
-    foldOutLabel.setText("OUTPUT GAIN", juce::dontSendNotification);
-    foldOutLabel.attachToComponent(&foldOutSlider, false);
-    addAndMakeVisible(foldOutLabel);
-    
-    crushStepsSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    crushStepsSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 40, 30);
-    crushStepsSlider.addListener(this);
-    crushStepsSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "STEPS", crushStepsSlider);
-    crushStepsSlider.setRange(4.0f, 16.0f, 4.0f);
-    crushStepsSlider.setValue(4.0f);
-    addAndMakeVisible(crushStepsSlider);
-    stepsLabel.setText("STEPS", juce::dontSendNotification);
-    stepsLabel.attachToComponent(&crushStepsSlider, false);
-    addAndMakeVisible(stepsLabel);
+   
 
     symmetryToggle.addListener(this);
     symmetryToggleAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.parameterTree, "SYM", symmetryToggle);
@@ -77,97 +22,101 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
     symmetryLabel.setText("SYMMETRY", juce::dontSendNotification);
     symmetryLabel.attachToComponent(&symmetryToggle, false);
     addAndMakeVisible(symmetryLabel);
-   
-    crushMixSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    crushMixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 40, 30);
+
+    
+    
+    twoButton.addListener(this);
+    fourButton.addListener(this);
+    eightButton.addListener(this);
+    sixteenButton.addListener(this); 
+    addAndMakeVisible(twoButton);
+    addAndMakeVisible(fourButton);
+    addAndMakeVisible(eightButton);
+    addAndMakeVisible(sixteenButton);
+
+
+
+    driveSlider.addListener(this);
+    foldsSlider.addListener(this);
+    offsetSlider.addListener(this);
+    foldOutSlider.addListener(this);
+    crushStepsSlider.addListener(this);
     crushMixSlider.addListener(this);
-    crushMixSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "CRMIX", crushMixSlider);
-    crushMixSlider.setRange(0.0f, 1.0f, 0.01f);
-    crushMixSlider.setValue(0.5f);
-    addAndMakeVisible(crushMixSlider);
-    crushMixLabel.setText("MIX", juce::dontSendNotification);
-    crushMixLabel.attachToComponent(&crushMixSlider, false);
-    addAndMakeVisible(crushMixLabel);
-    
-    sClipInSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    sClipInSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 40, 30);
     sClipInSlider.addListener(this);
-    sClipInSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "CLIPIN", sClipInSlider);
-    sClipInSlider.setRange(0.0f, 1.5f, 0.01f);
-    sClipInSlider.setValue(1.0f);
-    addAndMakeVisible(sClipInSlider);
-    sClipInLabel.setText("DRIVE", juce::dontSendNotification);
-    sClipInLabel.attachToComponent(&sClipInSlider, false);
-    addAndMakeVisible(sClipInLabel);
-
-    posAlphaSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    posAlphaSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 40, 30);
     posAlphaSlider.addListener(this);
-    posAlphaSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "PALPH", posAlphaSlider);
-    posAlphaSlider.setRange(0.1f, 20.0f, 0.01f);
-    posAlphaSlider.setValue(1.0f);
-    addAndMakeVisible(posAlphaSlider);
-    posAlphaLabel.setText("POS ALPHA", juce::dontSendNotification);
-    posAlphaLabel.attachToComponent(&posAlphaSlider, false);
-    addAndMakeVisible(posAlphaLabel);
-
-    posThreshSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    posThreshSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 40, 30);
     posThreshSlider.addListener(this);
-    posThreshSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "PTHR", posThreshSlider);
-    posThreshSlider.setRange(0.0f, 1.0f, 0.01f);
-    posThreshSlider.setValue(1.0f);
-    addAndMakeVisible(posThreshSlider);
-    posThreshLabel.setText("POS THRESHOLD", juce::dontSendNotification);
-    posThreshLabel.attachToComponent(&posThreshSlider, false);
-    addAndMakeVisible(posThreshLabel);
-
-    negAlphaSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    negAlphaSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 40, 30);
     negAlphaSlider.addListener(this);
-    negAlphaSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "NALPH", negAlphaSlider);
-    negAlphaSlider.setRange(0.1f, 20.0f, 0.01f);
-    negAlphaSlider.setValue(1.0f);
-    addAndMakeVisible(negAlphaSlider);
-    negAlphaLabel.setText("NEG ALPHA", juce::dontSendNotification);
-    negAlphaLabel.attachToComponent(&negAlphaSlider, false);
-    addAndMakeVisible(negAlphaLabel);
-
-    negThreshSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    negThreshSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 40, 30);
     negThreshSlider.addListener(this);
-    negThreshSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "NTHR", negThreshSlider);
-    negThreshSlider.setRange(0.0f, 1.0f, 0.01f);
-    negThreshSlider.setValue(1.0f);
-    addAndMakeVisible(negThreshSlider);
-    negThreshLabel.setText("NEG THRESHOLD", juce::dontSendNotification);
-    negThreshLabel.attachToComponent(&negThreshSlider, false);
-    addAndMakeVisible(negThreshLabel);
-
-    sClipOutSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    sClipOutSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 40, 30);
     sClipOutSlider.addListener(this);
-    sClipOutSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "CLIPOUT", sClipOutSlider);
-    sClipOutSlider.setRange(0.0f, 1.5f, 0.01f);
-    sClipOutSlider.setValue(1.0f);
-    addAndMakeVisible(sClipOutSlider);
-    sClipOutLabel.setText("OUTPUT GAIN", juce::dontSendNotification);
-    sClipOutLabel.attachToComponent(&sClipOutSlider, false);
-    addAndMakeVisible(sClipOutLabel);
-    
-    clipMixSlider.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
-    clipMixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 40, 30);
     clipMixSlider.addListener(this);
-    clipMixSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "MIX", clipMixSlider);
-    clipMixSlider.setRange(0.0f, 1.0f, 0.01f);
-    clipMixSlider.setValue(0.5f);
-    addAndMakeVisible(clipMixSlider);
-    clipMixLabel.setText("MIX", juce::dontSendNotification);
-    clipMixLabel.attachToComponent(&clipMixSlider, false);
-    addAndMakeVisible(clipMixLabel);
 
-   
-    setSize (900, 500);
+    driveSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "DRIVE", driveSlider);
+    setSlider(driveSlider, 0.0f, 3.0f, 0.01f, 1.0f, juce::Colours::orange);
+    setLabel(driveLabel, driveSlider, "DRIVE");
+
+    
+    foldsSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "FOLDS", foldsSlider);
+    setSlider(foldsSlider, 1.0f, 8.0f, 1.0f, 1.0f, juce::Colours::orange);
+    setLabel(foldsLabel, foldsSlider, "FOLDS");
+
+    
+    offsetSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "OFFSET", offsetSlider);
+    setSlider(offsetSlider, -0.5f, 0.5f, 0.01f, 0.0f, juce::Colours::orange);
+    setLabel(offsetLabel, offsetSlider, "OFFSET");
+
+
+
+    
+    foldOutSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "FOUT", foldOutSlider);
+    setSlider(foldOutSlider, 0.0f, 3.0f, 0.01f, 1.0f, juce::Colours::orange);
+    setLabel(foldOutLabel, foldOutSlider, "OUTPUT GAIN");
+
+    
+    crushStepsSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "STEPS", crushStepsSlider);
+    setSlider(crushStepsSlider, 4.0f, 16.0f, 4.0f, 16.0f, juce::Colours::purple);
+    setLabel(stepsLabel, crushStepsSlider, "CRUSH STEPS");
+
+
+    
+    crushMixSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "CRMIX", crushMixSlider);
+    setSlider(crushMixSlider, 0.0f, 1.0f, 0.01f, 0.5f, juce::Colours::purple);
+    setLabel(crushMixLabel, crushMixSlider, "CRUSH MIX");
+
+    
+    sClipInSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "CLIPIN", sClipInSlider);
+    setSlider(sClipInSlider, 0.0f, 1.5f, 0.01f, 1.0f, juce::Colours::firebrick);
+    setLabel(sClipInLabel, sClipInSlider, "DRIVE");
+
+    
+    posAlphaSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "PALPH", posAlphaSlider);
+    setSlider(posAlphaSlider, 0.1f, 20.0f, 0.1f, 1.0f, juce::Colours::firebrick);
+    setLabel(posAlphaLabel, posAlphaSlider, "POS ALPHA");
+
+    
+    posThreshSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "PTHR", posThreshSlider);
+    setSlider(posThreshSlider, 0.0f, 1.0f, 0.01f, 1.0f, juce::Colours::firebrick);
+    setLabel(posThreshLabel, posThreshSlider, "POS THRESHOLD");
+
+
+    negAlphaSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "NALPH", negAlphaSlider);
+    setSlider(negAlphaSlider, 0.1f, 20.0f, 0.1f, 1.0f, juce::Colours::firebrick);
+    setLabel(negAlphaLabel, negAlphaSlider, "NEG ALPHA");
+
+    negThreshSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "NTHR", negThreshSlider);
+    setSlider(negThreshSlider, -1.0f, 1.0f, 0.01f, 1.0f, juce::Colours::firebrick);
+    setLabel(negThreshLabel, negThreshSlider, "NEG THRESHOLD");
+
+    sClipOutSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "CLIPOUT", sClipOutSlider);
+    setSlider(sClipOutSlider, 0.0f, 1.5f, 0.01f, 1.0f, juce::Colours::firebrick);
+    setLabel(sClipOutLabel, sClipOutSlider, "OUTPUT GAIN");
+
+    clipMixSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "MIX", clipMixSlider);
+    setSlider(clipMixSlider, 0.0f, 1.0f, 0.01f, 0.5f, juce::Colours::sandybrown);
+    setLabel(clipMixLabel, clipMixSlider, "MIX");
+    
+    
+    
+    setSize (900, 350);
 }
 
 DistortionPluginAudioProcessorEditor::~DistortionPluginAudioProcessorEditor()
@@ -178,7 +127,7 @@ DistortionPluginAudioProcessorEditor::~DistortionPluginAudioProcessorEditor()
 void DistortionPluginAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (juce::Colours::blue);
+    g.fillAll (juce::Colours::slategrey);
 
 }
 
@@ -188,10 +137,8 @@ void DistortionPluginAudioProcessorEditor::resized()
     foldsSlider.setBounds       (120, 40, 100, 100);
     offsetSlider.setBounds      (220, 40, 100, 100);
     foldOutSlider.setBounds     (320, 40, 100, 100);
-    crushStepsSlider.setBounds  (520, 40, 100, 100);
-    
+    //crushStepsSlider.setBounds  (520, 40, 100, 100);
     crushMixSlider.setBounds    (620, 40, 100, 100);
-
     sClipInSlider.setBounds     (20,  200, 100, 100);
     posAlphaSlider.setBounds    (120, 200, 100, 100);
     posThreshSlider.setBounds   (220, 200, 100, 100);
@@ -200,6 +147,11 @@ void DistortionPluginAudioProcessorEditor::resized()
     negThreshSlider.setBounds   (520, 200, 100, 100);
     sClipOutSlider.setBounds    (620, 200, 100, 100);
     clipMixSlider.setBounds     (750, 40, 40, 260);
+
+    twoButton.setBounds(520, 40, 40, 40);
+    fourButton.setBounds(560, 40, 40, 40);
+    eightButton.setBounds(520, 80, 40, 40);
+    sixteenButton.setBounds(560, 80, 40, 40);
 
 }
 
@@ -280,4 +232,41 @@ void DistortionPluginAudioProcessorEditor::buttonClicked(juce::Button* button)
             negAlphaSlider.setVisible(true);
         }
     }
+    else if (button == &twoButton)
+    {
+        audioProcessor.distortion.setCrushSteps(2);
+    }
+    else if (button == &fourButton)
+    {
+        audioProcessor.distortion.setCrushSteps(4);
+    }
+    else if (button == &eightButton)
+    {
+        audioProcessor.distortion.setCrushSteps(8);
+    }
+    else if (button == &sixteenButton)
+    {
+        audioProcessor.distortion.setCrushSteps(16);
+    }
 }
+
+void DistortionPluginAudioProcessorEditor::setSlider(juce::Slider& slider, float min, float max, float step, float default, juce::Colour colour)
+{
+    slider.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
+    slider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 40, 30);
+    slider.setRange(min, max, step);
+    slider.setColour(juce::Slider::thumbColourId, colour);
+    slider.setColour(juce::Slider::backgroundColourId, juce::Colours::black);
+    slider.setColour(juce::Slider::trackColourId, juce::Colours::black);
+    addAndMakeVisible(slider);
+}
+
+void DistortionPluginAudioProcessorEditor::setLabel(juce::Label& label, juce::Slider& slider, std::string name) 
+{
+    label.setColour(juce::Label::textColourId, juce::Colours::white);
+    label.setText(name, juce::dontSendNotification);
+    label.attachToComponent(&slider, false);
+    addAndMakeVisible(label);
+}
+
+//void DistortionPluginAudioProcessorEditor::setButton(juce::Label& label, juce::Slider& slider, std::string name)

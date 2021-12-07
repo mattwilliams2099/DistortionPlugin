@@ -21,7 +21,7 @@ private:
     float rectInGain, rectThresh, rectOutGain;
     float sClipInGain, posAlpha, sClipPosThresh, negAlpha, sClipNegThresh, sClipOutGain;
     float crushSteps;
-    bool crushBypass, symmetryToggle;
+    bool symmetryToggle;
     float folds;
     float foldDrive = 0.0f, foldOutGain, foldOffset;
     float crushMix, sClipMix;
