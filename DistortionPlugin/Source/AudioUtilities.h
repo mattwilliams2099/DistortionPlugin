@@ -16,7 +16,7 @@ inline float wetDryMix (float input)
 }
 
 
-inline float parameterSmooth(float input, float previousInput, float alpha = 0.9)
+inline float parameterSmooth(float input, float previousInput, float alpha = 0.95)
 {
     return (1.0f - alpha) * input + alpha * previousInput;
 }

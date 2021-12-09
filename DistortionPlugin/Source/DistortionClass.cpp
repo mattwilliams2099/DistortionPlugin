@@ -27,26 +27,7 @@ float DistortionClass::bitCrusher(float input)
 
 float DistortionClass::waveFolder(float input)
 {
-
-    input = (input * foldDrive) + foldOffset;
-    float fold1, fold2, fold3, fold4;
-    /*
-    if (input >= (-1 / folds) && input <= (1 / folds))          { return input; }    
-    else if (input > (1 / folds) && input <= (2 / folds))       { return -input + (2 / folds); }
-    else if (input > (2 / folds) && input <= (3 / folds))       { return input - (2 / folds); }
-    else if (input > (3 / folds) && input <= (4 / folds))       { return -input + (4 / folds); }
-    else if (input > (4 / folds) && input <= (5 / folds))       { return input - (4 / folds); }
-    else if (input > (5 / folds) && input <= (6 / folds))       { return -input + (6 / folds); }
-    else if (input > (6 / folds) && input <= (7 / folds))       { return input - (6 / folds); }
-    else if (input > (7 / folds))                               { return -input + (8 / folds); }
-    else if (input < (-1 / folds) && input >= (-2 / folds))     { return -input - (2 / folds); }
-    else if (input < (-2 / folds) && input >= (-3 / folds))     { return input + (2 / folds); }
-    else if (input < (-3 / folds) && input >= (-4 / folds))     { return -input - (4 / folds); }
-    else if (input < (-4 / folds) && input >= (-5 / folds))     { return input + (4 / folds); }
-    else if (input < (-5 / folds) && (input >= -6 / folds))     { return -input - (6 / folds); }
-    else if (input < (-6 / folds) && input >= (-7 / folds))     { return input + (6 / folds); }
-    else if (input < (-7 / folds)) { return -input - (8 / folds); }       
-    */
+    float fold1, fold2, fold3;
     if (input > foldThresh)
         fold1 = -input + (2 * foldThresh);
     else if (input < -foldThresh)
