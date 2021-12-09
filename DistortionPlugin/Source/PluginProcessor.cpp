@@ -170,6 +170,9 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     distortion.setSClipPosThresh(parameterSmooth(posThreshCurrent,  posThreshPrev));
     distortion.setSClipOutGain(parameterSmooth  (clipOutCurrent,    clipOutPrev));
     distortion.setMix(parameterSmooth           (mixCurrent,        mixPrev));
+    distortion.setWet(parameterSmooth(wetDryCurrent, wetDryPrev));
+    distortion.setOutputGain(parameterSmooth(outputGainCurrent, outputGainPrev));
+
     if (distortion.getSymmetryToggle() == false)
     {
         distortion.setNegAlpha(parameterSmooth  (negAlphCurrent, negAlphPrev));
@@ -224,6 +227,8 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     negThreshPrev = distortion.getSClipNegThresh();
     clipOutPrev = distortion.getSClipOutGain();
     mixPrev = distortion.getMix();
+    wetDryPrev = distortion.getWet();
+    outputGainPrev = distortion.getOutputGain();
 }
 
 //==============================================================================
@@ -274,6 +279,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout DistortionPluginAudioProcess
     parameters.push_back(std::make_unique <juce::AudioParameterFloat>("CLIPOUT","Post Clip Gain",   0.0f,   1.5f,   1.0f));
     parameters.push_back(std::make_unique <juce::AudioParameterFloat>("MIX",    "Mix",              0.0f,   1.0f,   0.5f));
     parameters.push_back(std::make_unique <juce::AudioParameterBool>  ("SYM",   "SYMMETRY",         false));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("WDMIX", "WetDryMix", 0.0f, 1.0f, 1.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("OUT", "Output", 0.0f, 1.3f, 1.0f));
     return { parameters.begin(), parameters.end() };
 }
 

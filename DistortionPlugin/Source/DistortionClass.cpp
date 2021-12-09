@@ -61,6 +61,6 @@ float DistortionClass::distortionProcess(float input)
     float foldedSignal = foldOutGain * waveFolder((input * foldDrive) + foldOffset);
     float crushedSignal = bitCrusher(foldedSignal);
     float clippedSignal = sClipOutGain * softClipper(sClipInGain * input);
-    return (wetDryMix(sClipMix) * ((crushMix * crushedSignal) + (wetDryMix(crushMix) * foldedSignal))) + (sClipMix * clippedSignal);
+    return outputGain * ((input * wetDryMix(wet))+(wet*((wetDryMix(sClipMix) * ((crushMix * crushedSignal) + (wetDryMix(crushMix) * foldedSignal))) + (sClipMix * clippedSignal))));
 }
 

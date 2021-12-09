@@ -35,6 +35,11 @@ private:
     juce::Slider driveSlider, foldThreshSlider, offsetSlider, foldOutSlider, crushMixSlider;
     juce::Label  driveLabel,  foldThreshLabel,  offsetLabel,  foldOutLabel,  crushMixLabel,  stepsLabel;
     juce::Label folderLabel, clipperLabel, crusherLabel;
+
+    juce::Slider wetDrySlider;
+    juce::Slider outputGainSlider;
+    juce::Label wetDryLabel;
+    juce::Label outputGainLabel;
     
     juce::Slider sClipInSlider, posAlphaSlider, posThreshSlider, negAlphaSlider, negThreshSlider, sClipOutSlider, clipMixSlider;
     juce::Label  sClipInLabel,  posAlphaLabel,  posThreshLabel,  negAlphaLabel,  negThreshLabel,  sClipOutLabel,  clipMixLabel;
@@ -56,6 +61,9 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> negThreshSliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sClipOutSliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> clipMixSliderAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> wetDrySliderAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> outputGainSliderAttachment;
+
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionPluginAudioProcessorEditor)

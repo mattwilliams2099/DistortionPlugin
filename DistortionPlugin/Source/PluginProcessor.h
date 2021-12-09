@@ -56,12 +56,12 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     juce::AudioProcessorValueTreeState parameterTree;
     DistortionClass distortion;
-    float driveCurrent, offsetCurrent, foldThreshCurrent, fOutCurrent, crMixCurrent, clipInCurrent, posAlphCurrent, posThreshCurrent, negAlphCurrent, negThreshCurrent, clipOutCurrent, mixCurrent;
+    float driveCurrent, offsetCurrent, foldThreshCurrent, fOutCurrent, crMixCurrent, clipInCurrent, posAlphCurrent, posThreshCurrent, negAlphCurrent, negThreshCurrent, clipOutCurrent, mixCurrent, wetDryCurrent, outputGainCurrent;
 private:
     
     bool zeroInput = true;
     float lastVal = 0.0f;
-    float drivePrev, offsetPrev = 0.0f, foldThreshPrev, fOutPrev, crMixPrev, clipInPrev, posAlphPrev, posThreshPrev, negAlphPrev, negThreshPrev, clipOutPrev, mixPrev;
+    float drivePrev, offsetPrev = 0.0f, foldThreshPrev, fOutPrev, crMixPrev, clipInPrev, posAlphPrev, posThreshPrev, negAlphPrev, negThreshPrev, clipOutPrev, mixPrev, wetDryPrev, outputGainPrev;
     juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
     void parameterSmoothing();
     

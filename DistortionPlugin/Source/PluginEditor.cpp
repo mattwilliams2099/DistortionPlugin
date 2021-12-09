@@ -54,6 +54,10 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
     negThreshSlider.addListener(this);
     sClipOutSlider.addListener(this);
     clipMixSlider.addListener(this);
+    wetDrySlider.addListener(this);
+    outputGainSlider.addListener(this);
+
+
 
     driveSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "DRIVE", driveSlider);
     setSlider(driveSlider, 0.0f, 3.0f, 0.01f, 1.0f, juce::Colours::orange);
@@ -112,6 +116,14 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
     clipMixSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "MIX", clipMixSlider);
     setSlider(clipMixSlider, 0.0f, 1.0f, 0.01f, 0.5f, juce::Colours::sandybrown, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     setLabel(clipMixLabel, clipMixSlider, "Mix");
+
+    wetDrySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "WDMIX", wetDrySlider);
+    setSlider(wetDrySlider, 0.0f, 1.0f, 0.01f, 1.0f, juce::Colours::orange, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    setLabel(wetDryLabel, wetDrySlider, "Wet/Dry Mix");
+
+    outputGainSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "OUT", outputGainSlider);
+    setSlider(outputGainSlider, 0.0f, 1.3f, 0.01f, 1.0f, juce::Colours::orange, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    setLabel(outputGainLabel, outputGainSlider, "Output");
     
     folderLabel.setColour(juce::Label::textColourId, juce::Colours::whitesmoke);
     folderLabel.setColour(juce::Label::backgroundColourId , juce::Colours::darkslategrey);
@@ -176,7 +188,10 @@ void DistortionPluginAudioProcessorEditor::resized()
     negThreshSlider.setBounds   (270, row2y, 50, 120);
     sClipOutSlider.setBounds    (320, row2y, 50, 120);
 
-    clipMixSlider.setBounds     (400, row1y, 75, 75);
+    clipMixSlider.setBounds     (400, row1y, 80, 80);
+    wetDrySlider.setBounds(400, row1y + 110, 80, 80);
+    outputGainSlider.setBounds(400, row1y + 220, 80, 80);
+
 
     twoButton.setBounds         (260, row1y + 20, 30, 30);
     fourButton.setBounds        (290, row1y + 20, 30, 30);
@@ -240,6 +255,14 @@ void DistortionPluginAudioProcessorEditor::sliderValueChanged(juce::Slider* slid
     else if (slider == &clipMixSlider)
     {
         audioProcessor.mixCurrent = *audioProcessor.parameterTree.getRawParameterValue("MIX");
+    }
+    else if (slider == &wetDrySlider)
+    {
+        audioProcessor.wetDryCurrent = *audioProcessor.parameterTree.getRawParameterValue("WDMIX");
+    }
+    else if (slider == &outputGainSlider)
+    {
+        audioProcessor.outputGainCurrent = *audioProcessor.parameterTree.getRawParameterValue("OUT");
     }
     
 }
