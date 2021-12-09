@@ -28,13 +28,13 @@ public:
     void buttonClicked(juce::Button* button) override;
 
 private:
-    void setSlider(juce::Slider& slider, float min = 0.0f, float max = 1.0f, float step = 0.01f, float default = 0.0f, juce::Colour colour = juce::Colours::black, juce::Slider::SliderStyle style = juce::Slider::SliderStyle::LinearVertical);
+    void setSlider(juce::Slider& slider, float min = 0.0f, float max = 1.0f, float step = 0.01f, float default = 0.0f, juce::Colour colour = juce::Colours::silver, juce::Slider::SliderStyle style = juce::Slider::SliderStyle::LinearVertical);
     void setLabel(juce::Label& label, juce::Component& component, std::string name, bool attach = true);
     //void setButton(juce::ToggleButton& button);
     DistortionPluginAudioProcessor& audioProcessor;
     juce::Slider driveSlider, foldThreshSlider, offsetSlider, foldOutSlider, crushMixSlider;
     juce::Label  driveLabel,  foldThreshLabel,  offsetLabel,  foldOutLabel,  crushMixLabel,  stepsLabel;
-    juce::Label folderLabel, clipperLabel, crusherLabel;
+    juce::Label folderLabel, clipperLabel, crusherLabel, utilitiesLabel;
 
     juce::Slider wetDrySlider;
     juce::Slider outputGainSlider;
