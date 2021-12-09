@@ -149,10 +149,10 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
 
 
     distortion.setFoldDrive(parameterSmooth     (*parameterTree.getRawParameterValue("DRIVE"), drivePrev));
-    //distortion.setFolds(parameterSmooth       (*parameterTree.getRawParameterValue("FOLDS"));
+    
     distortion.setFoldOffset(parameterSmooth    (*parameterTree.getRawParameterValue("OFFSET"), offsetPrev));
     distortion.setFoldOutGain(parameterSmooth   (*parameterTree.getRawParameterValue("FOUT"), fOutPrev));
-    //distortion.setCrushSteps(parameterSmooth  (*parameterTree.getRawParameterValue("STEPS"));
+
     distortion.setCrushMix(parameterSmooth      (*parameterTree.getRawParameterValue("CRMIX"), crMixPrev));
     distortion.setSClipInGain(parameterSmooth   (*parameterTree.getRawParameterValue("CLIPIN"), clipInPrev));
     distortion.setPosAlpha(parameterSmooth      (*parameterTree.getRawParameterValue("PALPH"), posAlphPrev));
@@ -237,7 +237,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout DistortionPluginAudioProcess
 {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
     parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("DRIVE", "Drive",            0.0f,   5.0f,   1.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("FOLDS", "FOLDS",            1.0f,   8.0f,   1.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("FOLDS", "FOLDS",            0.0f,   1.0f,   1.0f));
     parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("OFFSET","Offset",           -0.75f, 0.75f,  0.0f));
     parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("FOUT",  "Output",           0.0f,   5.0f,   1.0f));
     parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("STEPS", "Crush Steps",      4.0f,   16.0f,  4.0f));

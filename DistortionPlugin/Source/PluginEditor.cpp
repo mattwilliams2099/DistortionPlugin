@@ -56,8 +56,8 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
 
     
     foldsSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "FOLDS", foldsSlider);
-    setSlider(foldsSlider, 1.0f, 8.0f, 1.0f, 1.0f, juce::Colours::orange);
-    setLabel(foldsLabel, foldsSlider, "FOLDS");
+    setSlider(foldsSlider, 0.0f, 1.0f, 0.01f, 1.0f, juce::Colours::orange);
+    setLabel(foldsLabel, foldsSlider, "FOLD THRESH");
 
     
     offsetSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.parameterTree, "OFFSET", offsetSlider);
@@ -162,7 +162,7 @@ void DistortionPluginAudioProcessorEditor::sliderValueChanged(juce::Slider* slid
         
     }
     */if (slider == &foldsSlider) {
-        audioProcessor.distortion.setFolds(*audioProcessor.parameterTree.getRawParameterValue("FOLDS"));
+        audioProcessor.distortion.setFoldThresh(*audioProcessor.parameterTree.getRawParameterValue("FOLDS"));
         
     }/*
     else if (slider == &offsetSlider){

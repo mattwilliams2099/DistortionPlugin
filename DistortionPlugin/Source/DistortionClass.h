@@ -22,7 +22,7 @@ private:
     float sClipInGain, posAlpha, sClipPosThresh, negAlpha, sClipNegThresh, sClipOutGain;
     float crushSteps;
     bool symmetryToggle;
-    float folds;
+    float foldThresh;
     float foldDrive = 0.0f, foldOutGain, foldOffset;
     float crushMix, sClipMix;
 
@@ -59,12 +59,12 @@ public:
 
     float getFoldDrive()               { return foldDrive; }
     float getFoldOutGain()              { return foldOutGain; }
-    float getFolds()                    { return folds; }
+    float getFoldThresh()                    { return foldThresh; }
     float getFoldOffset()               { return foldOffset; }
 
     void setFoldDrive(float newVal)    { foldDrive = newVal; }
     void setFoldOutGain(float newVal)   { foldOutGain = newVal; }
-    void setFolds(float newVal)         { folds = newVal; }
+    void setFoldThresh(float newVal)         { foldThresh = newVal; }
     void setFoldOffset(float newVal)    { foldOffset = newVal; }
     float getCrushMix() { return crushMix; }
     float getMix() { return sClipMix; }
