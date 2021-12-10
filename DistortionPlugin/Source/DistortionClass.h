@@ -44,8 +44,8 @@ public:
     float getFoldOffset()                   { return foldOffset; }
     float getCrushMix()                     { return crushMix; }
     float getMix()                          { return sClipMix; }
-    float getOutputGain() { return outputGain; }
-    float getWet() { return wet; }
+    float getOutputGain()                   { return outputGain; }
+    float getWet()                          { return wet; }
 
     
     void setSClipInGain(float newVal)       { sClipInGain = newVal; }
@@ -64,7 +64,7 @@ public:
     void setFoldOffset(float newVal)        { foldOffset = newVal; }
     void setCrushMix(float newVal)          { crushMix = newVal; }
     void setMix(float newVal)               { sClipMix = newVal; }
-    void setOutputGain(float newVal) { outputGain = newVal; }
-    void setWet(float newVal) { wet = newVal; }
+    void setOutputGain(float newVal)        { outputGain = newVal; }
+    void setWet(float newVal)               { wet = newVal; }
 
 };

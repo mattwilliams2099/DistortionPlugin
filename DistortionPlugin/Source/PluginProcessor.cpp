@@ -111,6 +111,8 @@ void DistortionPluginAudioProcessor::prepareToPlay (double sampleRate, int sampl
     distortion.setSymmetryToggle(*parameterTree.getRawParameterValue("SYM"));
     distortion.setFoldOffset(*parameterTree.getRawParameterValue("OFFSET"));
     distortion.setCrushSteps(4.0f);
+    foldThreshCurrent = *parameterTree.getRawParameterValue("FOLDTHR");
+    foldThreshPrev = *parameterTree.getRawParameterValue("FOLDTHR");
 }
 
 void DistortionPluginAudioProcessor::releaseResources()
@@ -155,14 +157,16 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
 
 
     if (lastVal == 0.0f)
+    {
         offsetCurrent = 0.0f;
-    else 
+    }
+    else
+    {
         offsetCurrent = *parameterTree.getRawParameterValue("OFFSET");
-
+    }
     distortion.setFoldDrive(parameterSmooth     (driveCurrent,      drivePrev));
-
-    distortion.setFoldOffset(parameterSmooth(offsetCurrent, offsetPrev));
-
+    distortion.setFoldOffset(parameterSmooth    (offsetCurrent, offsetPrev));
+    distortion.setFoldThresh(parameterSmooth    (foldThreshCurrent, foldThreshPrev));
     distortion.setFoldOutGain(parameterSmooth   (fOutCurrent,       fOutPrev));
     distortion.setCrushMix(parameterSmooth      (crMixCurrent,      crMixPrev));
     distortion.setSClipInGain(parameterSmooth   (clipInCurrent,     clipInPrev));
@@ -200,25 +204,14 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
         auto* channelData = buffer.getWritePointer (channel);
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample) 
         {
-            
-
             lastVal = channelData[sample];
-            channelData[sample] = distortion.distortionProcess(channelData[sample]);
-            
+            channelData[sample] = distortion.distortionProcess(channelData[sample]);   
         }
-
-    }
-    /*if(channelData[sample] == 0.0f)
-        zeroInput = true;
-    else
-        zeroInput = false;
-    */
-    
-    
-    
+    }    
     drivePrev = distortion.getFoldDrive();
     offsetPrev = distortion.getFoldOffset();
     fOutPrev = distortion.getFoldOutGain();
+    foldThreshPrev = distortion.getFoldThresh();
     crMixPrev = distortion.getCrushMix();
     clipInPrev = distortion.getSClipInGain();
     posAlphPrev = distortion.getPosAlpha();
@@ -284,7 +277,3 @@ juce::AudioProcessorValueTreeState::ParameterLayout DistortionPluginAudioProcess
     return { parameters.begin(), parameters.end() };
 }
 
-void DistortionPluginAudioProcessor::parameterSmoothing()
-{
-  
-}
