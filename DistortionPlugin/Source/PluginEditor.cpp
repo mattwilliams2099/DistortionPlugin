@@ -13,35 +13,6 @@
 DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (DistortionPluginAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    symmetryToggle.addListener(this);   
-    symmetryToggleAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.parameterTree, "SYM", symmetryToggle);
-
-       
-    symmetryToggle.setClickingTogglesState(true);
-    symmetryToggle.setToggleState(false, juce::dontSendNotification); 
-    addAndMakeVisible(symmetryToggle);
-
-    setLabel(symmetryLabel, symmetryToggle, "Symmetry", false);
-    setLabel(stepsLabel, twoButton, "Steps", false);
-
-
-    
-    twoButton.addListener(this);
-    fourButton.addListener(this);
-    eightButton.addListener(this);
-    sixteenButton.addListener(this);
-    twoButton.setColour(juce::TextButton::buttonColourId, juce::Colours::darkslategrey);
-    fourButton.setColour(juce::TextButton::buttonColourId, juce::Colours::darkslategrey);
-    eightButton.setColour(juce::TextButton::buttonColourId, juce::Colours::darkslategrey);
-    sixteenButton.setColour(juce::TextButton::buttonColourId, juce::Colours::darkslategrey);
-    addAndMakeVisible(twoButton);
-    addAndMakeVisible(fourButton);
-    addAndMakeVisible(eightButton);
-    addAndMakeVisible(sixteenButton);
-
-
-
-
     driveSlider.addListener(this);
     foldThreshSlider.addListener(this);
     offsetSlider.addListener(this);
@@ -57,8 +28,13 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
     wetDrySlider.addListener(this);
     outputGainSlider.addListener(this);
 
-    using sliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
+    symmetryToggle.addListener(this);   
+    twoButton.addListener(this);
+    fourButton.addListener(this);
+    eightButton.addListener(this);
+    sixteenButton.addListener(this);
 
+    using sliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
     driveSliderAttachment = std::make_unique<sliderAttachment>      (audioProcessor.parameterTree, "DRIVE",     driveSlider);
     foldThreshSliderAttachment = std::make_unique<sliderAttachment> (audioProcessor.parameterTree, "FOLDTHR",   foldThreshSlider);
     offsetSliderAttachment = std::make_unique<sliderAttachment>     (audioProcessor.parameterTree, "OFFSET",    offsetSlider);
@@ -73,42 +49,31 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
     clipMixSliderAttachment = std::make_unique<sliderAttachment>    (audioProcessor.parameterTree, "MIX",       clipMixSlider);
     wetDrySliderAttachment = std::make_unique<sliderAttachment>     (audioProcessor.parameterTree, "WDMIX",     wetDrySlider);
     outputGainSliderAttachment = std::make_unique<sliderAttachment> (audioProcessor.parameterTree, "OUT",       outputGainSlider);
-
-    
+    symmetryToggleAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.parameterTree, "SYM", symmetryToggle);        
     
     setSlider(driveSlider, 0.0f, 3.0f, 0.01f, 1.0f);
     setLabel(driveLabel, driveSlider, "Drive");
-
-    
+     
     setSlider(foldThreshSlider, 0.05f, 1.0f, 0.01f, 1.0f);
     setLabel(foldThreshLabel, foldThreshSlider, "Thresh");
 
     setSlider(offsetSlider, -0.5f, 0.5f, 0.01f, 0.0f);
     setLabel(offsetLabel, offsetSlider, "Bias");    
-
-
-
-    
+       
     setSlider(foldOutSlider, 0.0f, 3.0f, 0.01f, 1.0f);
-    setLabel(foldOutLabel, foldOutSlider, "Gain");
-
-
-    
+    setLabel(foldOutLabel, foldOutSlider, "Level");
+        
     setSlider(crushMixSlider, 0.0f, 1.0f, 0.01f, 0.5f);
     setLabel(crushMixLabel, crushMixSlider, "Mix");
-
-    
-    setSlider(sClipInSlider, 0.0f, 1.5f, 0.01f, 1.0f);
+        
+    setSlider(sClipInSlider, 0.0f, 2.5f, 0.01f, 1.0f);
     setLabel(sClipInLabel, sClipInSlider, "Drive");
-
-    
+       
     setSlider(posAlphaSlider, 0.1f, 20.0f, 0.1f, 1.0f);
     setLabel(posAlphaLabel, posAlphaSlider, "(+) Alpha");
-
-    
+        
     setSlider(posThreshSlider, 0.0f, 1.0f, 0.01f, 1.0f);
     setLabel(posThreshLabel, posThreshSlider, "(+) Thresh");
-
 
     setSlider(negAlphaSlider, 0.1f, 20.0f, 0.1f, 1.0f);
     setLabel(negAlphaLabel, negAlphaSlider, "(-) Alpha");
@@ -117,7 +82,7 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
     setLabel(negThreshLabel, negThreshSlider, "(-) Thresh");
 
     setSlider(sClipOutSlider, 0.0f, 1.5f, 0.01f, 1.0f);
-    setLabel(sClipOutLabel, sClipOutSlider, "Gain");
+    setLabel(sClipOutLabel, sClipOutSlider, "Level");
 
     setSlider(clipMixSlider, 0.0f, 1.0f, 0.01f, 0.5f, juce::Colours::silver, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     setLabel(clipMixLabel, clipMixSlider, "Mix");
@@ -127,6 +92,15 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
 
     setSlider(outputGainSlider, 0.0f, 1.3f, 0.01f, 1.0f, juce::Colours::silver, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     setLabel(outputGainLabel, outputGainSlider, "Output");
+
+    setButton(symmetryToggle);
+    setLabel(symmetryLabel, symmetryToggle, "Symmetry", false);
+
+    setButton(twoButton);
+    setButton(fourButton);
+    setButton(eightButton);
+    setButton(sixteenButton);
+    setLabel(stepsLabel, twoButton, "Steps", false);
     
     setTitle(folderLabel, "Wave Folder");
     setTitle(clipperLabel, "Soft Clipper");
@@ -143,52 +117,47 @@ DistortionPluginAudioProcessorEditor::~DistortionPluginAudioProcessorEditor()
 //==============================================================================
 void DistortionPluginAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (juce::Colours::darkslategrey);
     g.setColour(juce::Colours::whitesmoke);
-    g.drawRoundedRectangle(15.0f, 35.0f, 210.0f, 170.0f, 3.0f, 1.0f);
-    g.drawRoundedRectangle(15.0f, 225.0f, 360.0f, 170.0f, 3.0f, 1.0f);
-    g.drawRoundedRectangle(240.0f, 35.0f, 135.0f, 170.0f, 3.0f, 1.0f);
-    g.drawRoundedRectangle(390.0f, 35.0f, 100.0f, 360.0f, 3.0f, 1.0f);
-
+    g.drawRoundedRectangle(15.0f,   35.0f,  210.0f, 170.0f, 3.0f, 1.0f); //Wave folder
+    g.drawRoundedRectangle(15.0f,   225.0f, 360.0f, 170.0f, 3.0f, 1.0f); //Soft Clipper
+    g.drawRoundedRectangle(240.0f,  35.0f,  135.0f, 170.0f, 3.0f, 1.0f); //Bit Crusher
+    g.drawRoundedRectangle(390.0f,  35.0f,  100.0f, 360.0f, 3.0f, 1.0f); //Output
 }
 
 void DistortionPluginAudioProcessorEditor::resized()
 {
-    int row2y = 260, row1y = 70;
-    driveSlider.setBounds       (20, row1y, 50,  120);
-    foldThreshSlider.setBounds  (70, row1y, 50,  120);
-    offsetSlider.setBounds      (120, row1y, 50, 120);
-    foldOutSlider.setBounds     (170, row1y, 50, 120);
+    int row2y = 260, row1y = 70, slHeight = 120, slWidth = 50;
+    driveSlider.setBounds       (20,  row1y, slWidth, slHeight);
+    foldThreshSlider.setBounds  (70,  row1y, slWidth, slHeight);
+    offsetSlider.setBounds      (120, row1y, slWidth, slHeight);
+    foldOutSlider.setBounds     (170, row1y, slWidth, slHeight);
+    crushMixSlider.setBounds    (320, row1y, slWidth, slHeight);
 
+    sClipInSlider.setBounds     (20,  row2y, slWidth, slHeight);
+    posAlphaSlider.setBounds    (70,  row2y, slWidth, slHeight);
+    posThreshSlider.setBounds   (120, row2y, slWidth, slHeight);
 
-    crushMixSlider.setBounds    (320, row1y, 50, 120);
+    negAlphaSlider.setBounds    (220, row2y, slWidth, slHeight);
+    negThreshSlider.setBounds   (270, row2y, slWidth, slHeight);
+    sClipOutSlider.setBounds    (320, row2y, slWidth, slHeight);
 
-    sClipInSlider.setBounds     (20, row2y, 50,  120);
-    posAlphaSlider.setBounds    (70, row2y, 50,  120);
-    posThreshSlider.setBounds   (120, row2y, 50, 120);
+    clipMixSlider.setBounds     (400, row1y,       80, 80);
+    wetDrySlider.setBounds      (400, row1y + 110, 80, 80);
+    outputGainSlider.setBounds  (400, row1y + 220, 80, 80);
+    
     symmetryToggle.setBounds    (182, row2y + 30, 50, 50);
-    negAlphaSlider.setBounds    (220, row2y, 50, 120);
-    negThreshSlider.setBounds   (270, row2y, 50, 120);
-    sClipOutSlider.setBounds    (320, row2y, 50, 120);
-
-    clipMixSlider.setBounds     (400, row1y, 80, 80);
-    wetDrySlider.setBounds(400, row1y + 110, 80, 80);
-    outputGainSlider.setBounds(400, row1y + 220, 80, 80);
-
-
+    symmetryLabel.setBounds     (165, row2y , 60, 30);    
     twoButton.setBounds         (260, row1y + 20, 30, 30);
     fourButton.setBounds        (290, row1y + 20, 30, 30);
     eightButton.setBounds       (260, row1y + 50, 30, 30);
     sixteenButton.setBounds     (290, row1y + 50, 30, 30);
-
-    folderLabel.setBounds       (25, row1y - 50, 110, 30);
-    clipperLabel.setBounds      (25, row2y - 50, 110, 30);
-    crusherLabel.setBounds      (250, row1y - 50, 100, 30);
-    utilitiesLabel.setBounds(400, row1y - 50, 70, 30);
-
     stepsLabel.setBounds        (270, row1y - 25, 40, 30);
-    symmetryLabel.setBounds     (165, row2y , 60, 30);
+
+    folderLabel.setBounds       (25, row1y - 50,  110, 30);
+    clipperLabel.setBounds      (25, row2y - 50,  110, 30);
+    crusherLabel.setBounds      (250, row1y - 50, 100, 30);
+    utilitiesLabel.setBounds    (400, row1y - 50, 70,  30);
 }
 
 void DistortionPluginAudioProcessorEditor::sliderValueChanged(juce::Slider* slider) 
@@ -201,10 +170,6 @@ void DistortionPluginAudioProcessorEditor::sliderValueChanged(juce::Slider* slid
     {
         audioProcessor.foldThreshCurrent = *audioProcessor.parameterTree.getRawParameterValue("FOLDTHR");
     }
-    /*else if (slider == &offsetSlider)
-    {
-        audioProcessor.offsetCurrent = *audioProcessor.parameterTree.getRawParameterValue("OFFSET");
-    }*/
     else if (slider == &foldOutSlider)
     {
         audioProcessor.fOutCurrent = *audioProcessor.parameterTree.getRawParameterValue("FOUT");
@@ -220,10 +185,14 @@ void DistortionPluginAudioProcessorEditor::sliderValueChanged(juce::Slider* slid
     else if (slider == &posAlphaSlider)
     {
         audioProcessor.posAlphCurrent = *audioProcessor.parameterTree.getRawParameterValue("PALPH");
+        if(audioProcessor.distortion.getSymmetryToggle() == true)
+            audioProcessor.negAlphCurrent = *audioProcessor.parameterTree.getRawParameterValue("PALPH");
     }
     else if (slider == &posThreshSlider)
     {
         audioProcessor.posThreshCurrent = *audioProcessor.parameterTree.getRawParameterValue("PTHR");
+        if (audioProcessor.distortion.getSymmetryToggle() == true)
+            audioProcessor.negThreshCurrent = *audioProcessor.parameterTree.getRawParameterValue("PTHR");
     }
     else if (slider == &negAlphaSlider)
     {
@@ -249,7 +218,6 @@ void DistortionPluginAudioProcessorEditor::sliderValueChanged(juce::Slider* slid
     {
         audioProcessor.outputGainCurrent = *audioProcessor.parameterTree.getRawParameterValue("OUT");
     }
-    
 }
 
 void DistortionPluginAudioProcessorEditor::buttonClicked(juce::Button* button)
@@ -326,3 +294,10 @@ void DistortionPluginAudioProcessorEditor::setTitle(juce::Label& label, std::str
     label.setColour(juce::Label::outlineColourId, juce::Colours::whitesmoke);
     addAndMakeVisible(label);
 }
+
+void DistortionPluginAudioProcessorEditor::setButton(juce::Button& button)
+{
+    button.setColour(juce::TextButton::buttonColourId, juce::Colours::darkslategrey);
+    addAndMakeVisible(button);
+}
+

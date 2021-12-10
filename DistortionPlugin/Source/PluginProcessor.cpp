@@ -69,8 +69,7 @@ double DistortionPluginAudioProcessor::getTailLengthSeconds() const
 
 int DistortionPluginAudioProcessor::getNumPrograms()
 {
-    return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
-                // so this should be at least 1, even if you're not really implementing programs.
+    return 1;              
 }
 
 int DistortionPluginAudioProcessor::getCurrentProgram()
@@ -94,8 +93,6 @@ void DistortionPluginAudioProcessor::changeProgramName (int index, const juce::S
 //==============================================================================
 void DistortionPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
     /*
     drivePrev =     *parameterTree.getRawParameterValue("DRIVE");
     offsetPrev =    *parameterTree.getRawParameterValue("OFFSET");
@@ -113,12 +110,11 @@ void DistortionPluginAudioProcessor::prepareToPlay (double sampleRate, int sampl
     distortion.setCrushSteps(4.0f);
     foldThreshCurrent = *parameterTree.getRawParameterValue("FOLDTHR");
     foldThreshPrev = *parameterTree.getRawParameterValue("FOLDTHR");
+    outputGainPrev = *parameterTree.getRawParameterValue("OUT");
 }
 
 void DistortionPluginAudioProcessor::releaseResources()
 {
-    // When playback stops, you can use this as an opportunity to free up any
-    // spare memory, etc.
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -153,9 +149,6 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-
-
-
     if (lastVal == 0.0f)
     {
         offsetCurrent = 0.0f;
@@ -165,7 +158,7 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
         offsetCurrent = *parameterTree.getRawParameterValue("OFFSET");
     }
     distortion.setFoldDrive(parameterSmooth     (driveCurrent,      drivePrev));
-    distortion.setFoldOffset(parameterSmooth    (offsetCurrent, offsetPrev));
+    distortion.setFoldOffset(parameterSmooth    (offsetCurrent,     offsetPrev));
     distortion.setFoldThresh(parameterSmooth    (foldThreshCurrent, foldThreshPrev));
     distortion.setFoldOutGain(parameterSmooth   (fOutCurrent,       fOutPrev));
     distortion.setCrushMix(parameterSmooth      (crMixCurrent,      crMixPrev));
@@ -174,30 +167,14 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     distortion.setSClipPosThresh(parameterSmooth(posThreshCurrent,  posThreshPrev));
     distortion.setSClipOutGain(parameterSmooth  (clipOutCurrent,    clipOutPrev));
     distortion.setMix(parameterSmooth           (mixCurrent,        mixPrev));
-    distortion.setWet(parameterSmooth(wetDryCurrent, wetDryPrev));
-    distortion.setOutputGain(parameterSmooth(outputGainCurrent, outputGainPrev));
+    distortion.setWet(parameterSmooth           (wetDryCurrent,     wetDryPrev));
+    distortion.setOutputGain(parameterSmooth    (outputGainCurrent, outputGainPrev));
+    distortion.setNegAlpha(parameterSmooth      (negAlphCurrent,    negAlphPrev));
+    distortion.setSClipNegThresh(parameterSmooth(negThreshCurrent,  negThreshPrev));
+  
 
-    if (distortion.getSymmetryToggle() == false)
-    {
-        distortion.setNegAlpha(parameterSmooth  (negAlphCurrent, negAlphPrev));
-        distortion.setSClipNegThresh(parameterSmooth(negThreshCurrent, negThreshPrev));
-    }
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
-
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-
     
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
@@ -262,9 +239,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout DistortionPluginAudioProcess
     parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("DRIVE", "Drive",            0.0f,   5.0f,   1.0f));
     parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("FOLDTHR", "Fold Thresh",    0.0f,   1.0f,   1.0f));
     parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("OFFSET","Offset",           -0.5f, 0.5f,  0.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("FOUT",  "Output",           0.0f,   5.0f,   1.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("FOUT",  "Output",           0.0f,   3.0f,   1.0f));
     parameters.push_back(std::make_unique <juce::AudioParameterFloat>("CRMIX",  "Crush Mix",        0.0f,   1.0f,   1.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("CLIPIN", "Pre Clip Gain",    0.0f,   1.5f,   1.0f));
+    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("CLIPIN", "Pre Clip Gain",    0.0f,   2.5f,   1.0f));
     parameters.push_back(std::make_unique <juce::AudioParameterFloat>("PALPH",  "Pos Alpha",        0.1f,   20.0f,  1.0f));
     parameters.push_back(std::make_unique <juce::AudioParameterFloat>("PTHR",   "Pos Threshold",    0.0f,   1.0f,   1.0f));
     parameters.push_back(std::make_unique <juce::AudioParameterFloat>("NALPH",  "Neg Alpha",        0.1f,   20.0f,  1.0f));

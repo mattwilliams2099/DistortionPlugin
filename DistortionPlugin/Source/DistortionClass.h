@@ -49,10 +49,10 @@ public:
 
     
     void setSClipInGain(float newVal)       { sClipInGain = newVal; }
-    void setPosAlpha(float newVal)          { posAlpha = newVal;
-                                              if (symmetryToggle == true) negAlpha = posAlpha; }
-    void setSClipPosThresh(float newVal)    { sClipPosThresh = newVal;
-                                              if (symmetryToggle == true) sClipNegThresh = sClipPosThresh; }
+    void setPosAlpha(float newVal) { posAlpha = newVal; }
+                                            //  if (symmetryToggle == true) negAlpha = posAlpha; }
+void setSClipPosThresh(float newVal) { sClipPosThresh = newVal; }
+                                            //  if (symmetryToggle == true) sClipNegThresh = sClipPosThresh; }
     void setNegAlpha(float newVal)          { negAlpha = newVal; }
     void setSClipNegThresh(float newVal)    { sClipNegThresh = newVal; }
     void setSClipOutGain(float newVal)      { sClipOutGain = newVal; }

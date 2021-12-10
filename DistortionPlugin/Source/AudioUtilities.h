@@ -9,6 +9,7 @@
 */
 
 #pragma once
+#include <math.h>
 
 inline float wetDryMix (float input)
 {
@@ -19,4 +20,9 @@ inline float wetDryMix (float input)
 inline float parameterSmooth(float input, float previousInput, float alpha = 0.95)
 {
     return (1.0f - alpha) * input + alpha * previousInput;
+}
+
+inline float dbToLinear(float db)
+{
+    return pow(10, db / 20);
 }
