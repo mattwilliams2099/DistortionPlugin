@@ -1,28 +1,17 @@
-/*
-  ==============================================================================
-
-    DistortionClass.cpp
-    Created: 4 Dec 2021 10:01:16am
-    Author:  Matthew Williams
-
-  ==============================================================================
-*/
 
 #include "DistortionClass.h"
-
-
 
 float DistortionClass::softClipper(float input)
 {
         if (input >= 0)
-            return (sClipPosThresh / atan(posAlpha)) * atan(posAlpha * input);
+            return (sClipPosThresh / atan (posAlpha)) * atan (posAlpha * input);
         else if (input < 0)
-            return (sClipNegThresh / atan(negAlpha)) * atan(negAlpha * input);
+            return (sClipNegThresh / atan (negAlpha)) * atan (negAlpha * input);
 }
 
 float DistortionClass::bitCrusher(float input)
 {
-        return round(input * crushSteps) * (1.0f / crushSteps);
+        return round (input * crushSteps) * (1.0f / crushSteps);
 }
 
 float DistortionClass::waveFolder(float input)
@@ -51,16 +40,13 @@ float DistortionClass::waveFolder(float input)
     else if (fold3 < -foldThresh)
         return -fold3 - (2 * foldThresh);
     else return fold3;
-
-
 }
 
 float DistortionClass::distortionProcess(float input)
 {
-
     float foldedSignal = foldOutGain * waveFolder((input * foldDrive) + foldOffset);
-    float crushedSignal = bitCrusher(foldedSignal);
-    float clippedSignal = sClipOutGain * softClipper(sClipInGain * input);
-    return outputGain * ((input * wetDryMix(wet))+(wet*((wetDryMix(sClipMix) * ((crushMix * crushedSignal) + (wetDryMix(crushMix) * foldedSignal))) + (sClipMix * clippedSignal))));
+    float crushedSignal = bitCrusher (foldedSignal);
+    float clippedSignal = sClipOutGain * softClipper (sClipInGain * input);
+    return outputGain * ((input * wetDryMix (wet)) + (wet * ((wetDryMix (sClipMix) * ((crushMix * crushedSignal) + (wetDryMix (crushMix) * foldedSignal))) + (sClipMix * clippedSignal))));
 }
 

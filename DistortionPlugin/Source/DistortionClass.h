@@ -1,12 +1,3 @@
-/*
-  ==============================================================================
-
-    DistortionClass.h
-    Created: 4 Dec 2021 10:01:16am
-    Author:  Matthew Williams
-
-  ==============================================================================
-*/
 
 #pragma once
 #include <cmath>
@@ -18,14 +9,22 @@ private:
     float softClipper(float input);
     float bitCrusher(float input);
     float waveFolder(float input);
-    float rectInGain, rectThresh, rectOutGain;
-    float sClipInGain, posAlpha, sClipPosThresh, negAlpha, sClipNegThresh, sClipOutGain;
+    float sClipInGain;
+    float posAlpha; 
+    float sClipPosThresh; 
+    float negAlpha; 
+    float sClipNegThresh;
+    float sClipOutGain;
     float crushSteps;
     bool symmetryToggle;
     float foldThresh;
-    float foldDrive, foldOutGain, foldOffset;
-    float crushMix, sClipMix;
-    float outputGain, wet;
+    float foldDrive;
+    float foldOutGain; 
+    float foldOffset;
+    float crushMix;
+    float sClipMix;
+    float outputGain;
+    float wet;
 
 public:
     float distortionProcess(float input);
@@ -49,10 +48,8 @@ public:
 
     
     void setSClipInGain(float newVal)       { sClipInGain = newVal; }
-    void setPosAlpha(float newVal) { posAlpha = newVal; }
-                                            //  if (symmetryToggle == true) negAlpha = posAlpha; }
-void setSClipPosThresh(float newVal) { sClipPosThresh = newVal; }
-                                            //  if (symmetryToggle == true) sClipNegThresh = sClipPosThresh; }
+    void setPosAlpha(float newVal)          { posAlpha = newVal; }
+    void setSClipPosThresh(float newVal)    { sClipPosThresh = newVal; }
     void setNegAlpha(float newVal)          { negAlpha = newVal; }
     void setSClipNegThresh(float newVal)    { sClipNegThresh = newVal; }
     void setSClipOutGain(float newVal)      { sClipOutGain = newVal; }

@@ -1,10 +1,3 @@
-/*
-  ==============================================================================
-
-    This file contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
 
 #pragma once
 
@@ -13,8 +6,7 @@
 #include "AudioUtilities.h"
 
 //==============================================================================
-/**
-*/
+
 class DistortionPluginAudioProcessor  : public juce::AudioProcessor
 {
 public:
@@ -56,10 +48,14 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     juce::AudioProcessorValueTreeState parameterTree;
     DistortionClass distortion;
-    float driveCurrent, offsetCurrent, foldThreshCurrent, fOutCurrent, crMixCurrent, clipInCurrent, posAlphCurrent, posThreshCurrent, negAlphCurrent, negThreshCurrent, clipOutCurrent, mixCurrent, wetDryCurrent, outputGainCurrent;
+    float driveCurrent, offsetCurrent, foldThreshCurrent, fOutCurrent, crMixCurrent, 
+        stepsCurrent, clipInCurrent, posAlphCurrent, posThreshCurrent, negAlphCurrent, 
+        negThreshCurrent, clipOutCurrent, mixCurrent, wetDryCurrent, outputGainCurrent;
 private:
     float lastVal = 0.0f;
-    float drivePrev, offsetPrev = 0.0f, foldThreshPrev, fOutPrev, crMixPrev, clipInPrev, posAlphPrev, posThreshPrev, negAlphPrev, negThreshPrev, clipOutPrev, mixPrev, wetDryPrev, outputGainPrev;
+    float drivePrev, offsetPrev = 0.0f, foldThreshPrev, fOutPrev, crMixPrev, stepsPrev, 
+        clipInPrev, posAlphPrev, posThreshPrev, negAlphPrev, negThreshPrev, clipOutPrev, 
+        mixPrev, wetDryPrev, outputGainPrev;
     juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
 
     

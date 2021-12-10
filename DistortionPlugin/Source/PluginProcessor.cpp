@@ -1,10 +1,4 @@
-/*
-  ==============================================================================
 
-    This file contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
@@ -93,24 +87,11 @@ void DistortionPluginAudioProcessor::changeProgramName (int index, const juce::S
 //==============================================================================
 void DistortionPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    /*
-    drivePrev =     *parameterTree.getRawParameterValue("DRIVE");
-    offsetPrev =    *parameterTree.getRawParameterValue("OFFSET");
-    fOutPrev =      *parameterTree.getRawParameterValue("FOUT");
-    crMixPrev =     *parameterTree.getRawParameterValue("CRMIX");
-    clipInPrev =    *parameterTree.getRawParameterValue("CLIPIN");
-    posAlphPrev =   *parameterTree.getRawParameterValue("PALPH");
-    posThreshPrev = *parameterTree.getRawParameterValue("PTHR");
-    negAlphPrev =   *parameterTree.getRawParameterValue("NALPH");
-    negThreshPrev = *parameterTree.getRawParameterValue("NTHR");
-    clipOutPrev =   *parameterTree.getRawParameterValue("CLIPOUT");
-    mixPrev =       *parameterTree.getRawParameterValue("MIX");   */
-    distortion.setSymmetryToggle(*parameterTree.getRawParameterValue("SYM"));
-    distortion.setFoldOffset(*parameterTree.getRawParameterValue("OFFSET"));
-    distortion.setCrushSteps(4.0f);
-    foldThreshCurrent = *parameterTree.getRawParameterValue("FOLDTHR");
-    foldThreshPrev = *parameterTree.getRawParameterValue("FOLDTHR");
-    outputGainPrev = *parameterTree.getRawParameterValue("OUT");
+    distortion.setSymmetryToggle (*parameterTree.getRawParameterValue ("SYM"));
+    distortion.setFoldOffset (*parameterTree.getRawParameterValue ("OFFSET"));
+    foldThreshCurrent = *parameterTree.getRawParameterValue ("FOLDTHR");
+    foldThreshPrev = *parameterTree.getRawParameterValue ("FOLDTHR");
+    outputGainPrev = *parameterTree.getRawParameterValue ("OUT");
 }
 
 void DistortionPluginAudioProcessor::releaseResources()
@@ -157,21 +138,22 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     {
         offsetCurrent = *parameterTree.getRawParameterValue("OFFSET");
     }
+
     distortion.setFoldDrive(parameterSmooth     (driveCurrent,      drivePrev));
     distortion.setFoldOffset(parameterSmooth    (offsetCurrent,     offsetPrev));
     distortion.setFoldThresh(parameterSmooth    (foldThreshCurrent, foldThreshPrev));
     distortion.setFoldOutGain(parameterSmooth   (fOutCurrent,       fOutPrev));
+    distortion.setCrushSteps(parameterSmooth    (stepsCurrent,      stepsPrev));
     distortion.setCrushMix(parameterSmooth      (crMixCurrent,      crMixPrev));
     distortion.setSClipInGain(parameterSmooth   (clipInCurrent,     clipInPrev));
     distortion.setPosAlpha(parameterSmooth      (posAlphCurrent,    posAlphPrev));
     distortion.setSClipPosThresh(parameterSmooth(posThreshCurrent,  posThreshPrev));
+    distortion.setNegAlpha(parameterSmooth      (negAlphCurrent,    negAlphPrev));
+    distortion.setSClipNegThresh(parameterSmooth(negThreshCurrent,  negThreshPrev));    
     distortion.setSClipOutGain(parameterSmooth  (clipOutCurrent,    clipOutPrev));
     distortion.setMix(parameterSmooth           (mixCurrent,        mixPrev));
     distortion.setWet(parameterSmooth           (wetDryCurrent,     wetDryPrev));
     distortion.setOutputGain(parameterSmooth    (outputGainCurrent, outputGainPrev));
-    distortion.setNegAlpha(parameterSmooth      (negAlphCurrent,    negAlphPrev));
-    distortion.setSClipNegThresh(parameterSmooth(negThreshCurrent,  negThreshPrev));
-  
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
@@ -184,11 +166,13 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
             lastVal = channelData[sample];
             channelData[sample] = distortion.distortionProcess(channelData[sample]);   
         }
-    }    
+    } 
+
     drivePrev = distortion.getFoldDrive();
     offsetPrev = distortion.getFoldOffset();
-    fOutPrev = distortion.getFoldOutGain();
     foldThreshPrev = distortion.getFoldThresh();
+    fOutPrev = distortion.getFoldOutGain();
+    stepsPrev = distortion.getCrushSteps();
     crMixPrev = distortion.getCrushMix();
     clipInPrev = distortion.getSClipInGain();
     posAlphPrev = distortion.getPosAlpha();
@@ -199,6 +183,7 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     mixPrev = distortion.getMix();
     wetDryPrev = distortion.getWet();
     outputGainPrev = distortion.getOutputGain();
+
 }
 
 //==============================================================================
@@ -236,21 +221,21 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 juce::AudioProcessorValueTreeState::ParameterLayout DistortionPluginAudioProcessor::createParameters() 
 {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("DRIVE", "Drive",            0.0f,   5.0f,   1.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("FOLDTHR", "Fold Thresh",    0.0f,   1.0f,   1.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("OFFSET","Offset",           -0.5f, 0.5f,  0.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat> ("FOUT",  "Output",           0.0f,   3.0f,   1.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("CRMIX",  "Crush Mix",        0.0f,   1.0f,   1.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("CLIPIN", "Pre Clip Gain",    0.0f,   2.5f,   1.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("PALPH",  "Pos Alpha",        0.1f,   20.0f,  1.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("PTHR",   "Pos Threshold",    0.0f,   1.0f,   1.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("NALPH",  "Neg Alpha",        0.1f,   20.0f,  1.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("NTHR",   "Neg Threshold",    -1.0f,  1.0f,   1.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("CLIPOUT","Post Clip Gain",   0.0f,   1.5f,   1.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("MIX",    "Mix",              0.0f,   1.0f,   0.5f));
-    parameters.push_back(std::make_unique <juce::AudioParameterBool>  ("SYM",   "SYMMETRY",         false));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("WDMIX", "WetDryMix", 0.0f, 1.0f, 1.0f));
-    parameters.push_back(std::make_unique <juce::AudioParameterFloat>("OUT", "Output", 0.0f, 1.3f, 1.0f));
+    parameters.push_back (std::make_unique <juce::AudioParameterFloat> ("DRIVE",  "Drive",            0.0f,   5.0f,   1.0f));
+    parameters.push_back (std::make_unique <juce::AudioParameterFloat> ("FOLDTHR","Fold Thresh",      0.0f,   1.0f,   1.0f));
+    parameters.push_back (std::make_unique <juce::AudioParameterFloat> ("OFFSET", "Offset",           -0.5f,  0.5f,   0.0f));
+    parameters.push_back (std::make_unique <juce::AudioParameterFloat> ("FOUT",   "Output",           0.0f,   3.0f,   1.0f));
+    parameters.push_back (std::make_unique <juce::AudioParameterFloat> ("CRMIX",  "Crush Mix",        0.0f,   1.0f,   1.0f));
+    parameters.push_back (std::make_unique <juce::AudioParameterFloat> ("CLIPIN", "Pre Clip Gain",    0.0f,   2.5f,   1.0f));
+    parameters.push_back (std::make_unique <juce::AudioParameterFloat> ("PALPH",  "Pos Alpha",        0.1f,   20.0f,  1.0f));
+    parameters.push_back (std::make_unique <juce::AudioParameterFloat> ("PTHR",   "Pos Threshold",    0.0f,   1.0f,   1.0f));
+    parameters.push_back (std::make_unique <juce::AudioParameterFloat> ("NALPH",  "Neg Alpha",        0.1f,   20.0f,  1.0f));
+    parameters.push_back (std::make_unique <juce::AudioParameterFloat> ("NTHR",   "Neg Threshold",    -1.0f,  1.0f,   1.0f));
+    parameters.push_back (std::make_unique <juce::AudioParameterFloat> ("CLIPOUT","Post Clip Gain",   0.0f,   1.5f,   1.0f));
+    parameters.push_back (std::make_unique <juce::AudioParameterFloat> ("MIX",    "Mix",              0.0f,   1.0f,   0.5f));
+    parameters.push_back (std::make_unique <juce::AudioParameterFloat> ("WDMIX",  "WetDryMix",        0.0f,    1.0f,   1.0f));
+    parameters.push_back (std::make_unique <juce::AudioParameterFloat> ("OUT",  "Output",             0.0f,    1.3f,   1.0f));
+    parameters.push_back (std::make_unique <juce::AudioParameterBool>  ("SYM",    "SYMMETRY",         false));
     return { parameters.begin(), parameters.end() };
 }
 
